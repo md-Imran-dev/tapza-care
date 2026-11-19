@@ -178,8 +178,13 @@ export default function Booking() {
                 gap: space.md,
               }}
             >
-              {offline&&<Txt style={styles.sub}>Offline · Showing saved slots. Availability is confirmed when you reconnect.</Txt>}
- {!!service && <Txt style={styles.heading}>{service}</Txt>}
+              {offline && (
+                <Txt style={styles.sub}>
+                  Offline · Showing saved slots. Availability is confirmed when
+                  you reconnect.
+                </Txt>
+              )}
+              {!!service && <Txt style={styles.heading}>{service}</Txt>}
               <Txt
                 style={{
                   fontWeight: "800",
@@ -197,7 +202,7 @@ export default function Booking() {
                 {dates.map((dt) => (
                   <Pressable
                     key={dt.iso}
-                    disabled={status==="pending"}
+                    disabled={status === "pending"}
                     onPress={() => {
                       setDate(dt.iso);
                       setSlot("");

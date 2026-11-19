@@ -1,5 +1,5 @@
 import { space, type, useTheme } from "../theme";
-import { memo, useCallback, useState, useEffect } from "react";
+import { memo, useCallback, useState, useEffect, useMemo } from "react";
 import { Skeleton } from "../components/States";
 import {
   Image,
@@ -76,7 +76,7 @@ export default function Home() {
   const configStatus = useCare((s) => s.configStatus);
   const message = useCare((s) => s.message);
   const [visibleIds, setVisibleIds] = useState<Set<string>>(new Set());
-  const viewability = { itemVisiblePercentThreshold: 10 };
+  const viewability = useMemo(() => ({ itemVisiblePercentThreshold: 10 }), []);
   const onViewable = useCallback(
     ({
       viewableItems,
