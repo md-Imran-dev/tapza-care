@@ -153,9 +153,10 @@ export const SectionRenderer = memo(function SectionRenderer({
   const config = useCare((state) => state.config);
   const doctors = useCare((state) => state.doctors);
   const name = useAuth((state) => state.session?.name ?? "there");
-  const offset = useSharedValue(visible ? 1 : 0);
+  // Content stays readable even before a platform reports its first viewability event.
+  const offset = useSharedValue(1);
   useEffect(() => {
-    if (visible) offset.value = withTiming(1, { duration: 400 });
+    if (visible) { offset.value=0; offset.value = withTiming(1, { duration: 400 }); }
   }, [visible, offset]);
   const revealStyle = useAnimatedStyle(() => ({
     opacity: offset.value,
