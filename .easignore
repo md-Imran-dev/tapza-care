@@ -5,3 +5,11 @@ coverage
 __tests__
 .maestro
 *.zip
+
+/artifacts/
+.env*.local
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision

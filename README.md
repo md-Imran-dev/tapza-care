@@ -70,7 +70,7 @@ npx expo export --platform web
 
 Four test suites / 15 tests cover both valid configs, malformed config rejection, unknown-section rendering, quick-action navigation, invalid/correct OTP, optimistic confirmation, 409 rollback, duplicate confirmation, persistent offline queue/replay and cached-config fallback. Native animations are mocked in unit tests; this is not device performance evidence.
 
-The development session passed lint, strict TypeScript, these tests, Expo Doctor (20/20), and Android/web bundle exports. Browser testing exercised onboarding, sign-in, name setup and session restoration. Device-specific gesture/notification/performance checks require an attached device. A bundle export is not an installable APK.
+The development session passed lint, strict TypeScript, these tests, Expo Doctor (20/20), and Android/web bundle exports. Browser testing exercised onboarding, sign-in, name setup and session restoration. The release APK was then installed on a V2503 / Android 17 phone. Onboarding, OTP/profile setup, both themes, dose marking, empty slots, forced 409, drag-to-dismiss, successful booking and history persistence after a full restart passed. Native sign-out and protected deep-link access were also checked. Notification permission and scheduling of 60 future dose reminders succeeded. Future delivery and formal frame-rate benchmarks were not measured. A bundle export alone is not an installable APK.
 
 ## Installable APK
 
@@ -80,7 +80,7 @@ An Expo project is linked in app.json. The preview profile generates an internal
 npx eas-cli@latest build --platform android --profile preview
 ```
 
-Use the resulting Expo build link to download the APK on Android, allow installation for that download source, and open Tapza Care. No Metro server is needed for the preview APK. Build status/link will be recorded in `docs/SUBMISSION_STATUS.md` when available. An APK is for Android; it is not an iOS installation artifact.
+Use the resulting Expo build link to download the APK on Android, allow installation for that download source, and open Tapza Care. No Metro server is needed for the preview APK. Download the verified APK: https://expo.dev/artifacts/eas/omr6a0KPf_ioe4jBVqu6sta258r0WGON8xMxZyewVBE.apk . The build and source commit are recorded in `docs/SUBMISSION_STATUS.md`. An APK is for Android; it is not an iOS installation artifact.
 
 ## Submission and honest cuts
 
@@ -90,4 +90,4 @@ The email conflicts between 24 and 48 hours; the attached PDF specifies 48 hours
 
 Optional shared-element transitions, dark mode and a full E2E suite are omitted. Family members are illustrative sample data; real family CRUD and service checkout are outside the core assessment slice. Images are the supplied prototype's remote Pexels URLs and need a connection for their first load. Translation coverage is intentionally partial. Mock reservations reset with the process; patient booking history persists on-device.
 
-A real Android demo recording, native screenshots and final GitHub submission require release/device steps. The exact current status is in `docs/SUBMISSION_STATUS.md`; this README does not claim those artifacts exist before they are produced.
+Native screenshots are in `docs/screenshots/`; the real Android recording is `docs/tapza-care-android-demo.mp4` (2× speed, no narration, with a final reminder-confirmation still). The installable APK is built and verified on-device. A GitHub remote/push and final submission remain; no submission email has been sent. See `docs/SUBMISSION_STATUS.md`.

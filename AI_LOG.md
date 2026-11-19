@@ -23,3 +23,7 @@
 ## Ownership and limits
 
 Code and test tooling were authored/edited with Codex. Documentation records actual work and verification; it does not claim unrecorded human hours, native device checks, a fabricated 48-hour commit history, or a demo video that was not recorded. Review `README.md` for the current verification and submission status.
+
+## Final release verification
+
+The EAS preview APK for commit `c36e34f` built successfully and was installed on the connected Android 17 / V2503 phone. Core native flows, conflict handling, gesture dismissal, persisted history, sign-out and protected links were exercised. Android notification permission and scheduling succeeded; future timed delivery and formal frame-rate benchmarks were not measured. Native screenshots and two recordings were captured with Android tools; the recordings were combined at 2× speed plus a final confirmation still into a 2:56 demo. No submitted email or public repository publication was performed.
