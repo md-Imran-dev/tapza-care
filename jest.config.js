@@ -1,6 +1,6 @@
 module.exports = {
   preset: "jest-expo",
- watchman:false,
+  watchman: false,
   testMatch: ["**/__tests__/**/*.test.ts", "**/__tests__/**/*.test.tsx"],
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   clearMocks: true,

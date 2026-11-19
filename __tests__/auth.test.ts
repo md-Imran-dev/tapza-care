@@ -10,7 +10,9 @@ beforeEach(() => {
     error: null,
   });
 });
-afterEach(() => {jest.useRealTimers();});
+afterEach(() => {
+  jest.useRealTimers();
+});
 test("invalid mobile number cannot request OTP", async () => {
   expect(await useAuth.getState().sendOtp("123")).toBe(false);
   expect(useAuth.getState().phone).toBe("");

@@ -1,0 +1,7 @@
+.git
+.expo
+node_modules
+coverage
+__tests__
+.maestro
+*.zip

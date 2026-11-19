@@ -1,4 +1,6 @@
-jest.mock("react-native-worklets",()=>require("react-native-worklets/src/mock"));
+jest.mock("react-native-worklets", () =>
+  require("react-native-worklets/src/mock"),
+);
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );
@@ -9,7 +11,15 @@ jest.mock("expo-haptics", () => ({
 jest.mock("expo-router", () => ({
   router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
 }));
-jest.mock("react-native-reanimated",()=>{
- const {Animated}=require('react-native');
- return {__esModule:true,default:Animated,useSharedValue:(value)=>({value}),useAnimatedStyle:(factory)=>factory(),useAnimatedScrollHandler:()=>()=>{},withTiming:(value)=>value,interpolate:(value)=>value};
+jest.mock("react-native-reanimated", () => {
+  const { Animated } = require("react-native");
+  return {
+    __esModule: true,
+    default: Animated,
+    useSharedValue: (value) => ({ value }),
+    useAnimatedStyle: (factory) => factory(),
+    useAnimatedScrollHandler: () => () => {},
+    withTiming: (value) => value,
+    interpolate: (value) => value,
+  };
 });

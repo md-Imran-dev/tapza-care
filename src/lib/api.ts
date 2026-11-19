@@ -1,3 +1,4 @@
+import { storage } from "./storage";
 import { create as createClient, AxiosError, type AxiosAdapter } from "axios";
 import {
   CONFIG_DIWALI,
@@ -121,7 +122,8 @@ const adapter: AxiosAdapter = async (config) => {
     const { doctorId, slotId } = input;
     const [slotDoctor, date] = String(slotId).split("|");
     const doctor = DOCTORS.find((d) => d.id === doctorId);
-    const slot = slotsFor(doctorId, date ?? "").find((s) => s.id === slotId);
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(date??""))fail(400,"Invalid appointment date");
+ const slot = slotsFor(doctorId, date ?? "").find((s) => s.id === slotId);
     if (!doctor || slotDoctor !== doctorId || !slot)
       fail(400, "Invalid appointment");
     const previous = reservations.get(slotId);
@@ -159,12 +161,13 @@ export const api = createClient({
 });
 export const getConfig = () =>
   api.get<LayoutConfig>("/config").then((r) => r.data);
-export const getDoctors = () =>
-  api.get<Doctor[]>("/doctors").then((r) => r.data);
-export const getPrescriptions = () =>
-  api.get<Prescription[]>("/prescriptions").then((r) => r.data);
-export const getSlots = (doctorId: string, date: string) =>
-  api.get<Slot[]>("/slots", { params: { doctorId, date } }).then((r) => r.data);
+async function cachedRequest<T>(key:string,request:()=>Promise<T>):Promise<T>{
+ try{const result=await request();await storage.write(`api:${key}`,result);return result;}
+ catch(error){if(error instanceof AxiosError&&error.code==='ERR_NETWORK'){const cached=await storage.read<T>(`api:${key}`);if(cached!==null)return cached;}throw error;}
+}
+export const getDoctors=()=>cachedRequest('doctors',()=>api.get<Doctor[]>('/doctors').then(r=>r.data));
+export const getPrescriptions=()=>cachedRequest('prescriptions',()=>api.get<Prescription[]>('/prescriptions').then(r=>r.data));
+export const getSlots=(doctorId:string,date:string)=>cachedRequest(`slots:${doctorId}:${date}`,()=>api.get<Slot[]>('/slots',{params:{doctorId,date}}).then(r=>r.data));
 export const postBooking = (
   doctorId: string,
   slotId: string,

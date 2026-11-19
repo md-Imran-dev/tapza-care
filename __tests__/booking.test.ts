@@ -59,3 +59,5 @@ test("config failure preserves last good layout", async () => {
   expect(useCare.getState().config).toBe(previous);
   expect(useCare.getState().configStatus).toBe("cached");
 });
+
+test('previously loaded slots remain bookable from cache while offline',async()=>{const slots=await getSlots('d1','2026-11-20');useCare.getState().updateNetwork({offline:true});const cached=await getSlots('d1','2026-11-20');expect(cached).toEqual(slots);const slot=cached.find(s=>s.available)!;expect(await useCare.getState().book('d1','2026-11-20',slot.id)).toBe(true);expect(useCare.getState().bookings[0].status).toBe('queued');});

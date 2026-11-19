@@ -120,7 +120,10 @@ export const useAuth = create<Auth>((set, get) => ({
     set({ session: next, name: next.name });
   },
   logout: async () => {
-    if(Platform.OS!=="web") { const {cancelReminders}=await import("../lib/reminders");await cancelReminders().catch(()=>{}); }
+    if (Platform.OS !== "web") {
+      const { cancelReminders } = await import("../lib/reminders");
+      await cancelReminders().catch(() => {});
+    }
     await saveSession(null);
     set({ session: null, phone: "", name: "", error: null, otpSentAt: 0 });
   },
