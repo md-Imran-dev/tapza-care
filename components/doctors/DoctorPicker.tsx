@@ -4,19 +4,22 @@ import type { Doctor } from "@/data/types";
 import { useTheme } from "@/theme";
 import { Txt, styles } from "../ui";
 
-export const DoctorPicker = memo(function DoctorPicker({ doctors, selectedId, disabled = false, onSelect }: {
+export const DoctorPicker = memo(function DoctorPicker({ doctors, selectedId, disabled = false, title = "Choose your doctor", emptyMessage = "No doctors available right now.", onSelect }: {
   doctors: Doctor[];
   selectedId: string | null;
   disabled?: boolean;
+  title?: string;
+  emptyMessage?: string;
   onSelect: (id: string) => void;
 }) {
   const t = useTheme();
   return (
     <View style={{ gap: t.space.sm, paddingBottom: t.space.md }}>
-      <Txt style={[styles.heading, { paddingHorizontal: t.space.xl }]}>Choose your doctor</Txt>
+      <Txt style={[styles.heading, { paddingHorizontal: t.space.xl }]}>{title}</Txt>
       <FlatList
         horizontal
         data={doctors}
+        ListEmptyComponent={<Txt>{emptyMessage}</Txt>}
         keyExtractor={(doctor) => doctor.id}
         showsHorizontalScrollIndicator={false}
         initialNumToRender={4}

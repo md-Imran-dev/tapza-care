@@ -17,7 +17,7 @@ import Animated, {
   ZoomIn,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { DoctorPicker } from "../../components/doctors/DoctorPicker";
+import { DoctorChooser } from "../../components/doctors/DoctorChooser";
 import { EmptyState, Skeleton } from "../../components/States";
 import { Button, Icon, styles, Txt } from "../../components/ui";
 import { DOCTORS } from "../../data/mockData";
@@ -40,9 +40,12 @@ export default function Booking() {
     date?: string;
     slotId?: string;
   }>();
+  const prescriptions = useCare((s) => s.prescriptions);
   const loadedDoctors = useCare((s) => s.doctors);
   const doctors = loadedDoctors.length ? loadedDoctors : DOCTORS;
-  const [selectedDoctorId, setSelectedDoctorId] = useState<string | null>(doctorId ?? null);
+  const [selectedDoctorId, setSelectedDoctorId] = useState<string | null>(
+    () => doctors.find((doctor) => doctor.id === doctorId)?.id ?? doctors[0].id,
+  );
   const d = doctors.find((doctor) => doctor.id === selectedDoctorId) ?? doctors[0];
   const t = useCare((s) => s.config.theme);
   const book = useCare((s) => s.book);
@@ -103,7 +106,7 @@ export default function Booking() {
       <Animated.View
         style={[
           {
-            maxHeight: "90%",
+            height: "90%",
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
             backgroundColor: palette.white,
@@ -153,11 +156,13 @@ export default function Booking() {
           </Animated.View>
         ) : (
           <>
-            <DoctorPicker
+            <DoctorChooser
               doctors={doctors}
+              prescriptions={prescriptions}
               selectedId={selectedDoctorId}
               disabled={status === "pending"}
               onSelect={(id) => {
+                if (id === selectedDoctorId) return;
                 setSelectedDoctorId(id);
                 setSlot("");
                 setStatus("idle");
