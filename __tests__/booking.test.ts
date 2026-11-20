@@ -1,8 +1,8 @@
-import { test, expect, beforeEach, afterEach, jest } from "@jest/globals";
-import { useCare } from "../src/state/app";
-import { DOCTORS } from "../src/data/mockData";
-import { getSlots, mockServer } from "../src/lib/api";
-import { storage } from "../src/lib/storage";
+import { afterEach, beforeEach, expect, test } from "@jest/globals";
+import { DOCTORS } from "../data/mockData";
+import { getSlots, mockServer } from "../lib/api";
+import { storage } from "../lib/storage";
+import { useCare } from "../state/app";
 beforeEach(() => {
   useCare.getState().reset();
   useCare.setState({ scope: "9999999999", hydrated: true, doctors: DOCTORS });

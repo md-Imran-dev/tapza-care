@@ -5,9 +5,9 @@ module.exports = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   clearMocks: true,
   collectCoverageFrom: [
-    "src/lib/config.ts",
-    "src/lib/api.ts",
-    "src/state/app.ts",
-    "src/state/auth.ts",
+    "lib/config.ts",
+    "lib/api.ts",
+    "state/app.ts",
+    "state/auth.ts",
   ],
 };

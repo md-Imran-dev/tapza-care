@@ -34,7 +34,7 @@ The network is intentionally simulated. No real booking, payment, SMS or WhatsAp
 ## Architecture and folder structure
 
 ```text
-src/app/
+app/
   auth/                 onboarding, login, OTP, profile setup
   (secure)/             patient route guard
     (tabs)/             home, bookings, prescriptions, profile
@@ -42,16 +42,15 @@ src/app/
     doctor/[id].tsx     doctor deep link
     prescription/[id]   prescription deep link
     doctors, family, reminders, contact, admin
-src/components/         shared native controls, header and state layouts
-src/screens/            composed home/auth/patient views
-src/lib/                Axios mock adapter, Zod validation, storage, reminders
-src/state/              Zustand auth and patient state
-src/theme/              semantic colours, spacing and typography tokens
-src/data/               shared types and two sample configurations
+components/         shared controls, page/auth layouts and home/prescription UI
+lib/                Axios mock adapter, Zod validation, storage, reminders
+state/              Zustand auth and patient state
+theme/              semantic colours, spacing and typography tokens
+data/               shared types and two sample configurations
 __tests__/              focused validation, rendering, auth and state tests
 ```
 
-Patient routes are gated at their shared layout, including details and modals. Native sessions use Expo SecureStore; the browser demo uses sessionStorage. AsyncStorage holds non-secret demo patient state and last-good config. It was chosen over MMKV to avoid an extra custom native dependency and support Expo Go. This storage choice is allowed by the assessment.
+Each route file contains its screen implementation. Shared UI lives in `components/`; there is no separate `screens/` or `src/` folder. Patient routes are gated at their shared layout, including details and modals. Native sessions use Expo SecureStore; the browser demo uses sessionStorage. AsyncStorage holds non-secret demo patient state and last-good config. It was chosen over MMKV to avoid an extra custom native dependency and support Expo Go. This storage choice is allowed by the assessment.
 
 The mocked backend uses an Axios adapter rather than a separate server. Its API contracts are `GET /config`, `GET /doctors`, `GET /slots?doctorId=&date=YYYY-MM-DD`, `POST /bookings {doctorId,slotId}` (201/409) and `GET /prescriptions`. An optional requestId makes offline retries idempotent. Slot IDs encode doctor, date and slot index; timestamps are ISO dates with the Indian timezone offset. Components do not directly mutate server fixtures.
 
@@ -80,7 +79,7 @@ An Expo project is linked in app.json. The preview profile generates an internal
 npx eas-cli@latest build --platform android --profile preview
 ```
 
-Use the resulting Expo build link to download the APK on Android, allow installation for that download source, and open Tapza Care. No Metro server is needed for the preview APK. Download the verified APK: https://expo.dev/artifacts/eas/omr6a0KPf_ioe4jBVqu6sta258r0WGON8xMxZyewVBE.apk . The build and source commit are recorded in `docs/SUBMISSION_STATUS.md`. An APK is for Android; it is not an iOS installation artifact.
+Use the resulting Expo build link to download the APK on Android, allow installation for that download source, and open Tapza Care. No Metro server is needed for the preview APK. Download the verified APK: <https://expo.dev/artifacts/eas/omr6a0KPf_ioe4jBVqu6sta258r0WGON8xMxZyewVBE.apk> . The build and source commit are recorded in `docs/SUBMISSION_STATUS.md`. An APK is for Android; it is not an iOS installation artifact.
 
 ## Submission and honest cuts
 
