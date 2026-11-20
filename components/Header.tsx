@@ -1,4 +1,10 @@
-import { metrics as uiMetrics , radius as uiRadius , space, type, useTheme } from "@/theme";
+import {
+  space,
+  type,
+  metrics as uiMetrics,
+  radius as uiRadius,
+  useTheme,
+} from "@/theme";
 import { router } from "expo-router";
 import { Pressable, View } from "react-native";
 import Animated, {
@@ -85,8 +91,7 @@ export function Header({ scroll }: { scroll?: SharedValue<number> }) {
                 minWidth: uiMetrics.compactTouch,
                 minHeight: uiMetrics.compactTouch,
                 borderRadius: uiRadius.avatar,
-                backgroundColor:
-                  l === lang ? palette.white : palette.whiteTint,
+                backgroundColor: l === lang ? palette.white : palette.whiteTint,
                 alignItems: "center",
                 justifyContent: "center",
                 marginLeft: space.tiny,
@@ -112,7 +117,8 @@ export function Header({ scroll }: { scroll?: SharedValue<number> }) {
       )}
       {!!scroll && (
         <Animated.View style={[{ overflow: "hidden" }, a]}>
-          <Pressable accessibilityRole="button"
+          <Pressable
+            accessibilityRole="button"
             onPress={() => router.push("/doctors")}
             style={[
               styles.row,

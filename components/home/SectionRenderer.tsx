@@ -1,4 +1,3 @@
-import { metrics as uiMetrics , radius as uiRadius, lineHeight as uiLineHeight , space, type, useTheme } from "@/theme";
 import { DoctorCard } from "@/components/doctors/DoctorCard";
 import { Button, Icon, styles, Txt } from "@/components/ui";
 import type {
@@ -12,6 +11,14 @@ import type {
 } from "@/data/types";
 import { useCare } from "@/state/app";
 import { useAuth } from "@/state/auth";
+import {
+  space,
+  type,
+  lineHeight as uiLineHeight,
+  metrics as uiMetrics,
+  radius as uiRadius,
+  useTheme,
+} from "@/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { memo, useEffect } from "react";
@@ -174,7 +181,8 @@ export const SectionRenderer = memo(function SectionRenderer({
             {h.sub}
           </Txt>
           <View style={[styles.row, { flexWrap: "wrap" }]}>
-            <Pressable accessibilityRole="button"
+            <Pressable
+              accessibilityRole="button"
               onPress={() => router.push("/booking")}
               style={{
                 backgroundColor: palette.white,
@@ -187,9 +195,12 @@ export const SectionRenderer = memo(function SectionRenderer({
                 maxWidth: "100%",
               }}
             >
-              <Txt style={{ fontWeight: "800", textAlign: "center" }}>{h.cta}</Txt>
+              <Txt style={{ fontWeight: "800", textAlign: "center" }}>
+                {h.cta}
+              </Txt>
             </Pressable>
-            <Pressable accessibilityRole="button"
+            <Pressable
+              accessibilityRole="button"
               onPress={() => router.push("/contact")}
               style={{
                 borderWidth: 1,
@@ -203,7 +214,13 @@ export const SectionRenderer = memo(function SectionRenderer({
                 maxWidth: "100%",
               }}
             >
-              <Txt style={{ color: palette.white, fontWeight: "700", textAlign: "center" }}>
+              <Txt
+                style={{
+                  color: palette.white,
+                  fontWeight: "700",
+                  textAlign: "center",
+                }}
+              >
                 WhatsApp us
               </Txt>
             </Pressable>
@@ -253,7 +270,8 @@ export const SectionRenderer = memo(function SectionRenderer({
           contentContainerStyle={{ paddingHorizontal: space.xl, gap: space.sm }}
         >
           {(s.items as ChipItem[]).map((c) => (
-            <Pressable accessibilityRole="button"
+            <Pressable
+              accessibilityRole="button"
               onPress={() =>
                 router.push({
                   pathname: "/doctors",
@@ -330,7 +348,8 @@ export const SectionRenderer = memo(function SectionRenderer({
         <Txt style={styles.heading}>{s.title}</Txt>
         <View style={{ flexDirection: "row", gap: space.sm }}>
           {(s.items as QuickActionItem[]).map((q, i) => (
-            <Pressable accessibilityRole="button"
+            <Pressable
+              accessibilityRole="button"
               key={q.id}
               onPress={() =>
                 router.push(
@@ -379,7 +398,14 @@ export const SectionRenderer = memo(function SectionRenderer({
                   }
                 />
               </View>
-              <Txt style={{ fontSize: type.micro, fontWeight: "800", textAlign: "center", maxWidth: "100%" }}>
+              <Txt
+                style={{
+                  fontSize: type.micro,
+                  fontWeight: "800",
+                  textAlign: "center",
+                  maxWidth: "100%",
+                }}
+              >
                 {q.label}
               </Txt>
               <Txt

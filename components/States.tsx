@@ -57,14 +57,58 @@ export function Skeleton({
               />
             ))}
           </View>
-          <View style={styles.row}>{[1, 2, 3, 4].map((i) => <View key={i} style={{ flex: 1, height: t.metrics.button + t.space.xl, borderRadius: t.radius.panel, backgroundColor: t.colors.line }} />)}</View>
-          <View style={styles.row}>{[1, 2].map((i) => <View key={i} style={{ flex: 1, gap: t.space.sm }}>{block(t.metrics.serviceImage, `image-${i}`)}{block(t.type.body, `name-${i}`)}{block(t.metrics.button, `book-${i}`)}</View>)}</View>
+          <View style={styles.row}>
+            {[1, 2, 3, 4].map((i) => (
+              <View
+                key={i}
+                style={{
+                  flex: 1,
+                  height: t.metrics.button + t.space.xl,
+                  borderRadius: t.radius.panel,
+                  backgroundColor: t.colors.line,
+                }}
+              />
+            ))}
+          </View>
+          <View style={styles.row}>
+            {[1, 2].map((i) => (
+              <View key={i} style={{ flex: 1, gap: t.space.sm }}>
+                {block(t.metrics.serviceImage, `image-${i}`)}
+                {block(t.type.body, `name-${i}`)}
+                {block(t.metrics.button, `book-${i}`)}
+              </View>
+            ))}
+          </View>
         </>
       ) : kind === "doctors" ? (
-        ["first", "second"].map((key) => <View key={key} style={[styles.row, { padding: t.space.md, borderRadius: t.radius.doctor, backgroundColor: t.colors.surface }]}>
-          <View style={{ width: t.metrics.avatar, height: t.metrics.doctorImage, backgroundColor: t.colors.line, borderRadius: t.radius.lg }} />
-          <View style={{ flex: 1, gap: t.space.md }}>{block(t.type.heading, "name")}{block(t.type.body, "specialty")}{block(t.type.caption, "time")}{block(t.metrics.touch, "actions")}</View>
-        </View>)
+        ["first", "second"].map((key) => (
+          <View
+            key={key}
+            style={[
+              styles.row,
+              {
+                padding: t.space.md,
+                borderRadius: t.radius.doctor,
+                backgroundColor: t.colors.surface,
+              },
+            ]}
+          >
+            <View
+              style={{
+                width: t.metrics.avatar,
+                height: t.metrics.doctorImage,
+                backgroundColor: t.colors.line,
+                borderRadius: t.radius.lg,
+              }}
+            />
+            <View style={{ flex: 1, gap: t.space.md }}>
+              {block(t.type.heading, "name")}
+              {block(t.type.body, "specialty")}
+              {block(t.type.caption, "time")}
+              {block(t.metrics.touch, "actions")}
+            </View>
+          </View>
+        ))
       ) : kind === "slots" ? (
         <View
           style={{ flexDirection: "row", flexWrap: "wrap", gap: t.space.sm }}
@@ -83,7 +127,14 @@ export function Skeleton({
         </View>
       ) : (
         <>
-          {[1, 2].map((i) => <Card key={i}>{block(t.type.caption, `date-${i}`)}{block(t.type.heading, `doctor-${i}`)}{block(t.type.body, `clinic-${i}`)}{block(t.metrics.touch, `diagnosis-${i}`)}</Card>)}
+          {[1, 2].map((i) => (
+            <Card key={i}>
+              {block(t.type.caption, `date-${i}`)}
+              {block(t.type.heading, `doctor-${i}`)}
+              {block(t.type.body, `clinic-${i}`)}
+              {block(t.metrics.touch, `diagnosis-${i}`)}
+            </Card>
+          ))}
         </>
       )}
     </View>

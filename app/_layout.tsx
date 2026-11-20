@@ -4,10 +4,13 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import "react-native-reanimated";
+import { setDynamicFeatureFlag } from "react-native-reanimated";
 import { CONFIG_NORMAL } from "../data/mockData";
 import { useAuth } from "../state/auth";
 import { deriveTheme } from "../theme";
+// Keep shared photos aligned with synchronously animated ancestor transforms.
+setDynamicFeatureFlag("TRACK_SYNCHRONOUS_PROPS_IN_LAYOUT_ANIMATIONS", true);
+
 export default function Layout() {
   const hydrated = useAuth((s) => s.hydrated);
   useEffect(() => {

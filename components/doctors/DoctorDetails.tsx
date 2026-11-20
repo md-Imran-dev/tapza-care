@@ -1,13 +1,13 @@
-import { metrics as uiMetrics , useTheme } from "@/theme";
-import { Skeleton } from "../States";
 import type { Doctor } from "@/data/types";
 import { useResource } from "@/hooks/useResource";
 import { useTranslation } from "@/hooks/useTranslation";
 import { getSlots } from "@/lib/api";
 import { localDateKey } from "@/lib/dates";
 import { useCare } from "@/state/app";
+import { metrics as uiMetrics, useTheme } from "@/theme";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
+import { Skeleton } from "../States";
 import { Button, Card, styles, Txt } from "../ui";
 import { DoctorPhoto } from "./DoctorPhoto";
 

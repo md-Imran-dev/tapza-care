@@ -1,10 +1,10 @@
-import { metrics as uiMetrics , useTheme } from "@/theme";
-import { Skeleton } from "../States";
 import type { Slot } from "@/data/types";
 import { useTranslation } from "@/hooks/useTranslation";
 import { localDateKey } from "@/lib/dates";
+import { metrics as uiMetrics, useTheme } from "@/theme";
 import { useMemo } from "react";
 import { Pressable, ScrollView, View } from "react-native";
+import { Skeleton } from "../States";
 import { Button, styles, Txt } from "../ui";
 
 type Props = {

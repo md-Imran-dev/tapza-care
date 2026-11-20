@@ -560,16 +560,21 @@ const messages: Record<string, readonly [string, string]> = {
   "Fail slot fetch": ["समय लोड असफल करें", "సమయాల లోడ్ విఫలం చేయండి"],
   "No available slots": ["कोई समय उपलब्ध नहीं", "అందుబాటులో సమయాలు లేవు"],
   "Empty doctor list": ["खाली डॉक्टर सूची", "ఖాళీ వైద్యుల జాబితా"],
-  "Empty prescription list": ["खाली प्रिस्क्रिप्शन सूची", "ఖాళీ మందుల చీటీల జాబితా"],
+  "Empty prescription list": [
+    "खाली प्रिस्क्रिप्शन सूची",
+    "ఖాళీ మందుల చీటీల జాబితా",
+  ],
   "Live configuration": ["लाइव कॉन्फ़िगरेशन", "లైవ్ కాన్ఫిగరేషన్"],
-  "Test slow networks, server failures and empty states.": ["धीमे नेटवर्क, सर्वर असफलता और खाली सूचियां जांचें।", "నెమ్మది నెట్‌వర్క్, సర్వర్ వైఫల్యం మరియు ఖాళీ జాబితాలను పరీక్షించండి."],
+  "Test slow networks, server failures and empty states.": [
+    "धीमे नेटवर्क, सर्वर असफलता और खाली सूचियां जांचें।",
+    "నెమ్మది నెట్‌వర్క్, సర్వర్ వైఫల్యం మరియు ఖాళీ జాబితాలను పరీక్షించండి.",
+  ],
 
   "Next available ·": ["अगला उपलब्ध समय ·", "తదుపరి అందుబాటు ·"],
   "Today · 6:30 PM": ["आज · शाम 6:30", "ఈరోజు · సాయంత్రం 6:30"],
   "Today · 7:15 PM": ["आज · शाम 7:15", "ఈరోజు · సాయంత్రం 7:15"],
   "Tomorrow · 10:00 AM": ["कल · सुबह 10:00", "రేపు · ఉదయం 10:00"],
   "Tomorrow · 11:30 AM": ["कल · सुबह 11:30", "రేపు · ఉదయం 11:30"],
-
 };
 
 export const localeFor = (lang: Lang) =>
@@ -578,7 +583,9 @@ export const localeFor = (lang: Lang) =>
 export function translateText(text: string, lang: Lang): string {
   if (lang === "en") return text;
   const key = text.trim();
-  const entry = Object.prototype.hasOwnProperty.call(messages, key) ? messages[key] : undefined;
+  const entry = Object.prototype.hasOwnProperty.call(messages, key)
+    ? messages[key]
+    : undefined;
   if (entry) return text.replace(key, entry[lang === "hi" ? 0 : 1]);
   const greeting = key.match(/^(Namaste|Shubh Deepavali), (.+)$/);
   if (greeting)

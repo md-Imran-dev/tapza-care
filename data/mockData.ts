@@ -1,5 +1,4 @@
 import type { Doctor, LayoutConfig, Prescription } from "./types";
-// ─── Real photography ───
 export const IMG = {
   clinicHero:
     "https://images.pexels.com/photos/7789603/pexels-photo-7789603.jpeg?auto=compress&cs=tinysrgb&fit=crop&h=627&w=1200",

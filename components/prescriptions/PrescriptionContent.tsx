@@ -34,7 +34,9 @@ export function PrescriptionContent({
       {rx ? (
         <>
           <Card>
-            <Txt localize={false} style={styles.heading}>{rx.doctorName}</Txt>
+            <Txt localize={false} style={styles.heading}>
+              {rx.doctorName}
+            </Txt>
             <Txt style={styles.sub}>
               {rx.clinicName} · {rx.issuedAt}
             </Txt>

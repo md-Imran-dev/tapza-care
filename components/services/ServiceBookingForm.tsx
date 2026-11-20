@@ -1,5 +1,3 @@
-import { metrics as uiMetrics , useTheme } from "@/theme";
-import { BookingSuccess } from "../booking/BookingSuccess";
 import type { ServiceItem } from "@/data/types";
 import { useResource } from "@/hooks/useResource";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -7,13 +5,21 @@ import { getServiceSlots } from "@/lib/api";
 import { localDateKey } from "@/lib/dates";
 import { CLINIC_LOCATION, serviceReservationSchema } from "@/lib/services";
 import { useCare } from "@/state/app";
+import { metrics as uiMetrics, useTheme } from "@/theme";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { TextInput, View } from "react-native";
 import { AppointmentPicker } from "../booking/AppointmentPicker";
+import { BookingSuccess } from "../booking/BookingSuccess";
 import { Button, Card, styles, Txt } from "../ui";
 
-export function ServiceBookingForm({ service, onPendingChange }: { service: ServiceItem; onPendingChange?: (pending: boolean) => void }) {
+export function ServiceBookingForm({
+  service,
+  onPendingChange,
+}: {
+  service: ServiceItem;
+  onPendingChange?: (pending: boolean) => void;
+}) {
   const t = useTheme();
   const { translate } = useTranslation();
   const network = useCare((s) => s.network);
@@ -81,7 +87,9 @@ export function ServiceBookingForm({ service, onPendingChange }: { service: Serv
   }
   if (success)
     return (
-      <BookingSuccess title={offline ? "Service saved offline" : "Service booking confirmed"}>
+      <BookingSuccess
+        title={offline ? "Service saved offline" : "Service booking confirmed"}
+      >
         <Txt>{service.name}</Txt>
         <Txt>
           {date} · {selected?.label ?? slotId}

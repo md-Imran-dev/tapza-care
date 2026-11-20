@@ -1,6 +1,11 @@
-import { metrics as uiMetrics , space as uiSpace, radius as uiRadius , useTheme } from "@/theme";
 import type { Doctor } from "@/data/types";
 import { useTranslation } from "@/hooks/useTranslation";
+import {
+  metrics as uiMetrics,
+  radius as uiRadius,
+  space as uiSpace,
+  useTheme,
+} from "@/theme";
 import { router } from "expo-router";
 import { memo } from "react";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
@@ -29,7 +34,11 @@ export const DoctorCard = memo(function DoctorCard({
         onPress={() =>
           router.push({ pathname: "/doctor/[id]", params: { id: doctor.id } })
         }
-        style={{ width: compact ? t.metrics.doctorCardCompact : t.metrics.doctorCardWide }}
+        style={{
+          width: compact
+            ? t.metrics.doctorCardCompact
+            : t.metrics.doctorCardWide,
+        }}
       >
         <DoctorPhoto
           doctor={doctor}
@@ -63,7 +72,11 @@ export const DoctorCard = memo(function DoctorCard({
           >
             {doctor.expYears} years experience
           </Txt>
-          <Txt style={{ color: t.colors.textSecondary, fontSize: t.type.caption }}>Next available · {doctor.nextSlot}</Txt>
+          <Txt
+            style={{ color: t.colors.textSecondary, fontSize: t.type.caption }}
+          >
+            Next available · {doctor.nextSlot}
+          </Txt>
         </Pressable>
         <View style={card.actions}>
           <Pressable

@@ -1,29 +1,35 @@
 # AI assistance log
 
-## Prompts that shaped this implementation
+I used Codex throughout this assignment for implementation, debugging, tests and documentation. The entries below summarise the prompts and decisions; they are not a verbatim transcript. A passing test or generated answer was not treated as proof that a native flow worked.
 
-- User supplied the Tapza Care assessment PDF and a React/Vite prototype ZIP and asked for a careful read-only review. Codex inspected the source and identified that native implementation, persistence, real mock endpoint behaviour and submission artifacts were absent.
-- User supplied a source export with suggested conversion instructions. Those instructions were treated as reference content, not as an instruction to execute immediately.
-- User requested the app screens match the prototype screenshots. Codex created Expo Router patient screens using the reference content and images.
-- User asked whether all assessment flows were complete. Codex identified the remaining gaps instead of claiming the UI constituted a completed assessment.
-- User requested full completion using Zotto's app flow, explicitly excluding guests, with screen completion before optimization. Codex inspected the actual Zotto auth/secure route layouts and implemented onboarding, phone/OTP verification, first-time profile setup and protected patient routes. The OTP backend remains deliberately mocked and is labelled as such.
+## Prompts that shaped the app
 
-## Decisions and rejected approaches
+| Request                                                                                                                    | Result                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Read the assessment and supplied prototype carefully.                                                                      | Used the prototype as a visual reference, then built the missing native behaviour and mock API flows.                                                                                  |
+| Follow the existing onboarding/phone/OTP flow, with no guests.                                                             | Added protected Expo Router routes, session hydration and first-time profile setup. OTP remains explicitly mocked.                                                                     |
+| Match the doctor cards, details and bottom bar references; use reusable components.                                        | Extracted shared doctor cards/details/photo UI and adapted layouts for mobile and larger text.                                                                                         |
+| Open Book visit with a doctor selected, allow swiping between doctors, and keep scheduling open when switching categories. | Revised the original directory-first approach into an in-sheet doctor picker with a separate previously consulted filter.                                                              |
+| Clinic services should not open a doctor consultation.                                                                     | Added service-specific slots, location/address validation and booking metadata.                                                                                                        |
+| Make language changes work and show progress.                                                                              | Added a shared English/Hindi/Telugu catalog, per-patient persistence and a loading state.                                                                                              |
+| Check remaining requirements carefully and restore the required tests.                                                     | Restored tracked tests, next-slot labels, service-sheet gestures/success animation, theme tokens, loading skeletons and accessibility fixes.                                           |
+| The photo animation is rough and too fast.                                                                                 | Slowed photo motion to 500ms, removed image crossfade, adjusted navigation fades, and enabled transform tracking after Reanimated reported stale values. Smoothness remains imperfect. |
 
-- Kept the prototype's teal/festival visual direction and realistic Indian sample content; rejected copying its website marketing/audit page into the app.
-- Rejected the prototype's incomplete starter snippets: they referenced undefined helpers, exposed an always-redirecting root and claimed persistence/sync that did not exist.
-- Rejected a guest bypass. Every patient route sits under a guarded layout; sessions hydrate before navigation.
-- Chose AsyncStorage for non-secret demo persistence so the app can run in Expo Go; native session material uses SecureStore, and browser demo sessions use sessionStorage. Did not add an MMKV/Nitro dependency just to mimic the handoff's suggested stack; the PDF permits any storage choice.
-- Implemented the five comparable backend endpoints through an Axios mock adapter. No external production service is contacted. Kept network controls independently configurable.
-- Added synchronous optimistic booking insertion followed by backend reconciliation; 409 removes only the rejected optimistic item. Offline requests persist with stable IDs, replay on simulated reconnect, and reconcile conflicts.
-- Used FlatList with memoized sections and viewability-driven Reanimated reveals. Rejected fixed getItemLayout heights for variable section layouts and OS-scaled text because inaccurate heights break scrolling.
-- Centralized colours, spacing and typography in the theme module rather than retaining literal styles throughout components. Improved the festival secondary-text colour for readability.
-- Added focused tests for validation, section rendering, auth and booking state rather than treating the prototype's static “tests passed” cards as evidence.
+## Suggestions I rejected or changed
 
-## Ownership and limits
+- **Guest access:** excluded as requested; patient routes share an auth guard.
+- **Copying prototype starter code unchanged:** it did not provide the required persistence and failure handling. The visual reference was retained, not its unsupported claims.
+- **A separate server or extra storage library:** the Axios mock adapter and AsyncStorage were enough for this assessment. SecureStore is used for native sessions.
+- **Opening a full doctor directory before scheduling:** changed after feedback to keep doctor selection and availability in the same sheet.
+- **Sending every service to one doctor:** replaced with an independent service booking flow.
+- **Fixed list heights:** avoided for variable sections and scaled text, where inaccurate measurements would break scrolling.
+- **Ignoring tests in Git:** initially done at my request, then reversed after the requirement audit. Required tests are tracked again.
+- **Calling a successful bundle export a verified app:** native installation and interaction checks were recorded separately.
 
-Code and test tooling were authored/edited with Codex. Documentation records actual work and verification; it does not claim unrecorded human hours, native device checks, a fabricated 48-hour commit history, or a demo video that was not recorded. Review `README.md` for the current verification and submission status.
+## Validation and limits
 
-## Final release verification
+Codex ran lint, TypeScript and 40 tests, and used the connected Android phone for selected flow, layout and release-rendering checks. Unit tests mock native animation. The measured photo sample still had 5.32% janky frames; the later transform-tracking fix has not been rebenchmarked. Details are in [PERFORMANCE_CHECK.md](docs/PERFORMANCE_CHECK.md).
 
-The EAS preview APK for commit `c36e34f` built successfully and was installed on the connected Android 17 / V2503 phone. Core native flows, conflict handling, gesture dismissal, persisted history, sign-out and protected links were exercised. Android notification permission and scheduling succeeded; future timed delivery and formal frame-rate benchmarks were not measured. Native screenshots and two recordings were captured with Android tools; the recordings were combined at 2× speed plus a final confirmation still into a 2:56 demo. No submitted email or public repository publication was performed.
+Dark mode, automated E2E tests and production integrations were left out. iOS, timed notification delivery and a full accessibility audit were not verified. Existing demo media and the shared preview APK predate the latest UI changes.
+
+Active human hours were not tracked. No hour total, commit history or verification result has been invented. This log documents AI involvement; it does not replace understanding and reviewing the code before the follow-up interview.

@@ -1,5 +1,5 @@
-import { metrics as uiMetrics , useTheme } from "@/theme";
 import type { Doctor, Prescription } from "@/data/types";
+import { metrics as uiMetrics, useTheme } from "@/theme";
 import { memo, useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Txt } from "../ui";

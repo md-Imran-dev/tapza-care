@@ -1,5 +1,3 @@
-// ─── Tapza Care · Strict shared types (mirrors React Native codebase) ───
-// Shared contracts for the mock API, configuration and patient screens.
 export type ThemeColors = {
   primary: string;
   secondary: string;

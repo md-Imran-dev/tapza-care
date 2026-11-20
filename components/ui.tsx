@@ -1,19 +1,32 @@
-import { metrics as uiMetrics , radius as uiRadius, tracking as uiTracking, lineHeight as uiLineHeight , space, type, useTheme } from "@/theme";
+import {
+  space,
+  type,
+  lineHeight as uiLineHeight,
+  metrics as uiMetrics,
+  radius as uiRadius,
+  tracking as uiTracking,
+  useTheme,
+} from "@/theme";
 import * as Haptics from "expo-haptics";
 import { SymbolView } from "expo-symbols";
 import React from "react";
 import {
-  Pressable,
   Platform,
-  useWindowDimensions,
+  Pressable,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
   type TextProps,
   type ViewProps,
 } from "react-native";
 import { useTranslation } from "../hooks/useTranslation";
-export function Txt({ style, children, localize = true, ...props }: TextProps & { localize?: boolean }) {
+export function Txt({
+  style,
+  children,
+  localize = true,
+  ...props
+}: TextProps & { localize?: boolean }) {
   const { translate } = useTranslation();
   const { colors: theme } = useTheme();
   return (
@@ -89,7 +102,11 @@ export function Icon({
           typeof SymbolView
         >["name"]
       }
-      style={Platform.OS === "ios" ? undefined : { width: size * fontScale, height: size * fontScale }}
+      style={
+        Platform.OS === "ios"
+          ? undefined
+          : { width: size * fontScale, height: size * fontScale }
+      }
       tintColor={color ?? t.colors.textSecondary}
       size={size}
     />
@@ -150,8 +167,16 @@ export const styles = StyleSheet.create({
     padding: space.md,
     justifyContent: "center",
   },
-  title: { fontSize: type.title, fontWeight: "800", letterSpacing: uiTracking.title },
-  heading: { fontSize: type.lead, fontWeight: "800", letterSpacing: uiTracking.heading },
+  title: {
+    fontSize: type.title,
+    fontWeight: "800",
+    letterSpacing: uiTracking.title,
+  },
+  heading: {
+    fontSize: type.lead,
+    fontWeight: "800",
+    letterSpacing: uiTracking.heading,
+  },
   sub: { fontSize: type.caption, lineHeight: uiLineHeight.caption },
   row: { flexDirection: "row", alignItems: "center", gap: space.sm },
   page: { padding: space.xl, gap: space.lg, paddingBottom: space.section },
