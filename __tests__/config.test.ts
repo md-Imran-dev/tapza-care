@@ -1,6 +1,6 @@
-import { test, expect, beforeEach, afterEach, jest } from "@jest/globals";
-import { parseConfig } from "../src/lib/config";
-import { CONFIG_NORMAL, CONFIG_DIWALI } from "../src/data/mockData";
+import { expect, test } from "@jest/globals";
+import { CONFIG_DIWALI, CONFIG_NORMAL } from "../data/mockData";
+import { parseConfig } from "../lib/config";
 test.each([CONFIG_NORMAL, CONFIG_DIWALI])(
   "accepts complete normal/festival config v$version",
   (config) => expect(parseConfig(config).version).toBe(config.version),

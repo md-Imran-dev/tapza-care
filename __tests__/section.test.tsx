@@ -1,8 +1,8 @@
-import { test, expect, beforeEach, afterEach, jest } from "@jest/globals";
-import { render, screen, fireEvent } from "@testing-library/react-native";
-import { SectionRenderer } from "../src/screens/Home";
-import { CONFIG_NORMAL } from "../src/data/mockData";
+import { expect, test } from "@jest/globals";
+import { fireEvent, render, screen } from "@testing-library/react-native";
 import { router } from "expo-router";
+import { SectionRenderer } from "../components/home/SectionRenderer";
+import { CONFIG_NORMAL } from "../data/mockData";
 const scroll = { value: 0 } as Parameters<typeof SectionRenderer>[0]["scroll"];
 test("unknown section renders nothing", async () => {
   const result = await render(

@@ -13,3 +13,11 @@ __tests__
 *.p12
 *.key
 *.mobileprovision
+
+# Local generated code-context graph
+/graphify-out/
+
+# Local AI context and Graphify setup
+/.codex/
+/.graphifyignore
+/PROJECT_MEMORY.md
