@@ -29,7 +29,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
               width: t.metrics.avatar,
               height: t.metrics.avatar,
               borderRadius: t.radius.lg,
-              backgroundColor: t.colors.white + "25",
+              backgroundColor: t.colors.whiteTranslucent,
               alignItems: "center",
               justifyContent: "center",
             }}

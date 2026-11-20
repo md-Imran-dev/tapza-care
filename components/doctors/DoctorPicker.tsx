@@ -1,6 +1,6 @@
+import { metrics as uiMetrics , radius as uiRadius , useTheme } from "@/theme";
 import type { Doctor } from "@/data/types";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useTheme } from "@/theme";
 import { memo } from "react";
 import { FlatList, Image, Pressable, View } from "react-native";
 import { Txt, styles } from "../ui";
@@ -46,7 +46,7 @@ export const DoctorPicker = memo(function DoctorPicker({
             disabled={disabled}
             onPress={() => onSelect(item.id)}
             style={{
-              width: 172,
+              width: uiMetrics.pickerCardWidth,
               padding: t.space.md,
               borderRadius: t.radius.lg,
               borderWidth: 1,
@@ -61,7 +61,7 @@ export const DoctorPicker = memo(function DoctorPicker({
           >
             <Image
               source={{ uri: item.photoUrl }}
-              style={{ width: 44, height: 44, borderRadius: 14 }}
+              style={{ width: uiMetrics.compactTouch, height: uiMetrics.compactTouch, borderRadius: uiRadius.input }}
             />
             <Txt localize={false} style={{ fontWeight: "800" }}>{item.name}</Txt>
             <Txt style={styles.sub}>

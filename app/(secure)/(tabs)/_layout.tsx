@@ -1,8 +1,9 @@
+import { metrics as uiMetrics , space as uiSpace, radius as uiRadius , useTheme } from "@/theme";
 import { translateText } from "@/lib/i18n";
 import { Tabs } from "expo-router";
 import { useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Icon } from "../../../components/ui";
+import { Icon, Txt } from "../../../components/ui";
 import { useCare } from "../../../state/app";
 const routeNames = {
   home: "index",
@@ -11,6 +12,7 @@ const routeNames = {
   profile: "profile",
 } as const;
 export default function Layout() {
+  const t = useTheme();
   const insets = useSafeAreaInsets();
   const { fontScale } = useWindowDimensions();
   const lang = useCare((s) => s.lang);
@@ -22,31 +24,32 @@ export default function Layout() {
         headerShown: false,
         tabBarHideOnKeyboard: true,
         tabBarLabelPosition: "below-icon",
-        tabBarActiveTintColor: "#7A73AD",
-        tabBarInactiveTintColor: "#7C8586",
+        tabBarActiveTintColor: t.colors.tabActive,
+        tabBarInactiveTintColor: t.colors.inactive,
         tabBarStyle: {
-          height: 64 + Math.max(0, fontScale - 1) * 20,
-          paddingTop: 8,
-          paddingBottom: 8,
-          marginHorizontal: 12,
-          marginBottom: Math.max(insets.bottom, 8),
-          marginTop: 6,
-          backgroundColor: "#F2F6F5",
-          borderRadius: 26,
+          height: t.metrics.tabHeight + Math.max(0, fontScale - 1) * t.metrics.touch,
+          paddingTop: uiSpace.sm,
+          paddingBottom: uiSpace.sm,
+          marginHorizontal: uiSpace.md,
+          marginBottom: Math.max(insets.bottom, t.space.sm),
+          marginTop: uiSpace.xs,
+          backgroundColor: t.colors.tabBackground,
+          borderRadius: uiRadius.doctor,
           borderTopWidth: 0,
           borderWidth: 1,
-          borderColor: "#FFFFFF",
-          shadowColor: "#293F3A",
-          shadowOffset: { width: 0, height: 3 },
+          borderColor: t.colors.surface,
+          shadowColor: t.colors.textPrimary,
+          shadowOffset: { width: uiMetrics.none, height: uiMetrics.indicatorHeight },
           shadowOpacity: 0.12,
           shadowRadius: 6,
           elevation: 5,
         },
-        tabBarLabelStyle: { fontSize: 10, fontWeight: "500", marginTop: 3 },
+        tabBarIconStyle: { width: t.metrics.icon * fontScale, height: t.metrics.icon * fontScale },
+        tabBarLabelStyle: { fontSize: t.type.caption, fontWeight: "500", marginTop: uiSpace.labelGap },
         tabBarActiveBackgroundColor: "transparent",
         tabBarItemStyle: {
-          minHeight: 48,
-          paddingHorizontal: 2,
+          minHeight: uiMetrics.touch,
+          paddingHorizontal: uiSpace.tiny,
         },
       }}
     >
@@ -67,6 +70,7 @@ export default function Layout() {
                 tab?.label === "Rx" ? "Prescriptions" : (tab?.label ?? screen),
                 lang,
               ),
+              tabBarLabel: ({ color }) => <Txt style={{ color: String(color), fontSize: t.type.caption, textAlign: "center", marginTop: t.space.labelGap }}>{translateText(tab?.label === "Rx" ? "Prescriptions" : tab?.label ?? screen, lang)}</Txt>,
               tabBarIcon: ({ color }) => (
                 <Icon
                   name={

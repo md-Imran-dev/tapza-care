@@ -1,12 +1,13 @@
+import { metrics as uiMetrics , useTheme } from "@/theme";
+import { Skeleton } from "../States";
 import type { Doctor } from "@/data/types";
 import { useResource } from "@/hooks/useResource";
 import { useTranslation } from "@/hooks/useTranslation";
 import { getSlots } from "@/lib/api";
 import { localDateKey } from "@/lib/dates";
 import { useCare } from "@/state/app";
-import { useTheme } from "@/theme";
 import { useMemo, useState } from "react";
-import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { Button, Card, styles, Txt } from "../ui";
 import { DoctorPhoto } from "./DoctorPhoto";
 
@@ -48,7 +49,7 @@ export function DoctorDetails({
           overflow: "hidden",
         }}
       >
-        <View style={{ minHeight: 300 }}>
+        <View style={{ minHeight: uiMetrics.hero }}>
           <DoctorPhoto
             doctor={doctor}
             accessibilityLabel={`Portrait of ${doctor.name}`}
@@ -65,7 +66,7 @@ export function DoctorDetails({
             style={{
               padding: t.space.xl,
               gap: t.space.sm,
-              minHeight: 300,
+              minHeight: uiMetrics.hero,
               width: "55%",
               justifyContent: "flex-end",
             }}
@@ -125,8 +126,8 @@ export function DoctorDetails({
                 setSlot("");
               }}
               style={{
-                minWidth: 72,
-                minHeight: 84,
+                minWidth: uiMetrics.dateTileWidthLarge,
+                minHeight: uiMetrics.detailDateHeight,
                 justifyContent: "center",
                 alignItems: "center",
                 gap: t.space.xs,
@@ -148,7 +149,7 @@ export function DoctorDetails({
         </ScrollView>
         <Txt style={styles.heading}>Select time</Txt>
         {loading ? (
-          <ActivityIndicator color={t.colors.primary} />
+          <Skeleton kind="slots" />
         ) : error ? (
           <Button title="Retry available times" secondary onPress={retry} />
         ) : slots.some((s) => s.available) ? (
@@ -169,8 +170,8 @@ export function DoctorDetails({
                 onPress={() => setSlot(s.id)}
                 style={{
                   alignItems: "center",
-                  minWidth: 80,
-                  minHeight: 64,
+                  minWidth: uiMetrics.timeTileWidth,
+                  minHeight: uiMetrics.timeTileHeight,
                   justifyContent: "center",
                   padding: t.space.md,
                   borderRadius: t.radius.md,
@@ -184,7 +185,7 @@ export function DoctorDetails({
                 <View
                   style={{
                     height: slot === s.id ? 18 : 10,
-                    width: 2,
+                    width: uiMetrics.tickWidth,
                     backgroundColor: t.colors.primary,
                     marginBottom: t.space.sm,
                   }}

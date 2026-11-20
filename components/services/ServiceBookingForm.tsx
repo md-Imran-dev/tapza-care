@@ -1,3 +1,5 @@
+import { metrics as uiMetrics , useTheme } from "@/theme";
+import { BookingSuccess } from "../booking/BookingSuccess";
 import type { ServiceItem } from "@/data/types";
 import { useResource } from "@/hooks/useResource";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -5,14 +7,13 @@ import { getServiceSlots } from "@/lib/api";
 import { localDateKey } from "@/lib/dates";
 import { CLINIC_LOCATION, serviceReservationSchema } from "@/lib/services";
 import { useCare } from "@/state/app";
-import { useTheme } from "@/theme";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { TextInput, View } from "react-native";
 import { AppointmentPicker } from "../booking/AppointmentPicker";
 import { Button, Card, styles, Txt } from "../ui";
 
-export function ServiceBookingForm({ service }: { service: ServiceItem }) {
+export function ServiceBookingForm({ service, onPendingChange }: { service: ServiceItem; onPendingChange?: (pending: boolean) => void }) {
   const t = useTheme();
   const { translate } = useTranslation();
   const network = useCare((s) => s.network);
@@ -53,6 +54,7 @@ export function ServiceBookingForm({ service }: { service: ServiceItem }) {
     }
     submitting.current = true;
     setPending(true);
+    onPendingChange?.(true);
     setNotice("");
     try {
       const ok = await book(
@@ -74,14 +76,12 @@ export function ServiceBookingForm({ service }: { service: ServiceItem }) {
     } finally {
       submitting.current = false;
       setPending(false);
+      onPendingChange?.(false);
     }
   }
   if (success)
     return (
-      <Card>
-        <Txt style={styles.title}>
-          {offline ? "Service saved offline" : "Service booking confirmed"}
-        </Txt>
+      <BookingSuccess title={offline ? "Service saved offline" : "Service booking confirmed"}>
         <Txt>{service.name}</Txt>
         <Txt>
           {date} · {selected?.label ?? slotId}
@@ -99,12 +99,11 @@ export function ServiceBookingForm({ service }: { service: ServiceItem }) {
           title="View my bookings"
           onPress={() => router.replace("/bookings")}
         />
-      </Card>
+      </BookingSuccess>
     );
   return (
     <View style={{ gap: t.space.lg }}>
       <Card>
-        <Txt style={styles.title}>{service.name}</Txt>
         <Txt style={styles.heading}>
           {home ? "Collection at your address" : "Clinic service appointment"}
         </Txt>
@@ -134,7 +133,7 @@ export function ServiceBookingForm({ service }: { service: ServiceItem }) {
               maxLength={300}
               textAlignVertical="top"
               style={{
-                minHeight: 100,
+                minHeight: uiMetrics.addressHeight,
                 padding: t.space.md,
                 borderWidth: 1,
                 borderColor: t.colors.line,

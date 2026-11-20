@@ -1,8 +1,11 @@
+import { metrics as uiMetrics , radius as uiRadius, tracking as uiTracking, lineHeight as uiLineHeight , space, type, useTheme } from "@/theme";
 import * as Haptics from "expo-haptics";
 import { SymbolView } from "expo-symbols";
 import React from "react";
 import {
   Pressable,
+  Platform,
+  useWindowDimensions,
   StyleSheet,
   Text,
   View,
@@ -10,7 +13,6 @@ import {
   type ViewProps,
 } from "react-native";
 import { useTranslation } from "../hooks/useTranslation";
-import { space, type, useTheme } from "../theme";
 export function Txt({ style, children, localize = true, ...props }: TextProps & { localize?: boolean }) {
   const { translate } = useTranslation();
   const { colors: theme } = useTheme();
@@ -78,6 +80,7 @@ export function Icon({
   size?: number;
 }) {
   const t = useTheme();
+  const { fontScale } = useWindowDimensions();
   const [ios, other] = icons[name] ?? icons.rx;
   return (
     <SymbolView
@@ -86,6 +89,7 @@ export function Icon({
           typeof SymbolView
         >["name"]
       }
+      style={Platform.OS === "ios" ? undefined : { width: size * fontScale, height: size * fontScale }}
       tintColor={color ?? t.colors.textSecondary}
       size={size}
     />
@@ -107,6 +111,7 @@ export function Button({
     <Pressable
       accessibilityRole="button"
       disabled={disabled}
+      accessibilityState={{ disabled }}
       onPress={() => {
         void Haptics.selectionAsync().catch(() => {});
         onPress();
@@ -133,21 +138,21 @@ export function Button({
 }
 export const styles = StyleSheet.create({
   card: {
-    borderRadius: 22,
+    borderRadius: uiRadius.card,
     padding: space.lg,
     borderWidth: 1,
 
     gap: space.sm,
   },
   button: {
-    minHeight: 52,
-    borderRadius: 28,
+    minHeight: uiMetrics.button,
+    borderRadius: uiRadius.hero,
     padding: space.md,
     justifyContent: "center",
   },
-  title: { fontSize: type.title, fontWeight: "800", letterSpacing: -0.6 },
-  heading: { fontSize: type.lead, fontWeight: "800", letterSpacing: -0.4 },
-  sub: { fontSize: type.caption, lineHeight: 18 },
+  title: { fontSize: type.title, fontWeight: "800", letterSpacing: uiTracking.title },
+  heading: { fontSize: type.lead, fontWeight: "800", letterSpacing: uiTracking.heading },
+  sub: { fontSize: type.caption, lineHeight: uiLineHeight.caption },
   row: { flexDirection: "row", alignItems: "center", gap: space.sm },
   page: { padding: space.xl, gap: space.lg, paddingBottom: space.section },
 });

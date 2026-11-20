@@ -1,5 +1,5 @@
+import { metrics as uiMetrics , useTheme } from "@/theme";
 import { Modal, ScrollView, View } from "react-native";
-import { useTheme } from "@/theme";
 import { Button, Card, styles, Txt } from "./ui";
 
 type Props = {
@@ -25,7 +25,7 @@ export function ConfirmDialog({
     >
       <View style={{ flex: 1, justifyContent: "center", padding: t.space.xxl, backgroundColor: t.colors.overlay }}>
         <ScrollView style={{ flexGrow: 0 }} contentContainerStyle={{ alignItems: "center" }}>
-          <Card testID="confirm-dialog" accessibilityViewIsModal onAccessibilityEscape={() => { if (!busy) onCancel(); }} style={{ width: "100%", maxWidth: 420, gap: t.space.lg }}>
+          <Card testID="confirm-dialog" accessibilityViewIsModal onAccessibilityEscape={() => { if (!busy) onCancel(); }} style={{ width: "100%", maxWidth: uiMetrics.dialogMaxWidth, gap: t.space.lg }}>
             <Txt accessibilityRole="header" style={styles.heading}>{title}</Txt>
             <Txt>{message}</Txt>
             <Button title={busy ? "Please wait…" : confirmLabel} disabled={busy} onPress={onConfirm} />

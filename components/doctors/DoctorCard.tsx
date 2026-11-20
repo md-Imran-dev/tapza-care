@@ -1,6 +1,6 @@
+import { metrics as uiMetrics , space as uiSpace, radius as uiRadius , useTheme } from "@/theme";
 import type { Doctor } from "@/data/types";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useTheme } from "@/theme";
 import { router } from "expo-router";
 import { memo } from "react";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
@@ -29,7 +29,7 @@ export const DoctorCard = memo(function DoctorCard({
         onPress={() =>
           router.push({ pathname: "/doctor/[id]", params: { id: doctor.id } })
         }
-        style={{ width: compact ? 76 : 112 }}
+        style={{ width: compact ? t.metrics.doctorCardCompact : t.metrics.doctorCardWide }}
       >
         <DoctorPhoto
           doctor={doctor}
@@ -38,7 +38,7 @@ export const DoctorCard = memo(function DoctorCard({
           style={{
             width: "100%",
             flex: 1,
-            minHeight: 180,
+            minHeight: uiMetrics.doctorPortrait,
             borderRadius: t.radius.lg,
           }}
         />
@@ -63,6 +63,7 @@ export const DoctorCard = memo(function DoctorCard({
           >
             {doctor.expYears} years experience
           </Txt>
+          <Txt style={{ color: t.colors.textSecondary, fontSize: t.type.caption }}>Next available · {doctor.nextSlot}</Txt>
         </Pressable>
         <View style={card.actions}>
           <Pressable
@@ -110,41 +111,41 @@ export const DoctorCard = memo(function DoctorCard({
 const card = StyleSheet.create({
   container: {
     flexDirection: "row",
-    padding: 10,
-    gap: 12,
-    borderRadius: 26,
+    padding: uiSpace.inset,
+    gap: uiSpace.md,
+    borderRadius: uiRadius.doctor,
     borderWidth: 1,
     overflow: "hidden",
   },
   content: {
     flex: 1,
-    minWidth: 0,
-    paddingVertical: 12,
-    gap: 16,
+    minWidth: uiMetrics.none,
+    paddingVertical: uiSpace.md,
+    gap: uiSpace.lg,
     justifyContent: "space-between",
   },
   actions: {
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
-    gap: 8,
+    gap: uiSpace.sm,
   },
   book: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 6,
+    gap: uiSpace.xs,
     borderWidth: 1,
-    borderRadius: 28,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    minHeight: 48,
+    borderRadius: uiRadius.hero,
+    paddingHorizontal: uiSpace.md,
+    paddingVertical: uiSpace.inset,
+    minHeight: uiMetrics.touch,
     flexShrink: 1,
   },
   contact: {
-    minWidth: 48,
-    minHeight: 48,
-    borderRadius: 24,
+    minWidth: uiMetrics.touch,
+    minHeight: uiMetrics.touch,
+    borderRadius: uiRadius.avatar,
     alignItems: "center",
     justifyContent: "center",
   },

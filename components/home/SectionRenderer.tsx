@@ -1,3 +1,4 @@
+import { metrics as uiMetrics , radius as uiRadius, lineHeight as uiLineHeight , space, type, useTheme } from "@/theme";
 import { DoctorCard } from "@/components/doctors/DoctorCard";
 import { Button, Icon, styles, Txt } from "@/components/ui";
 import type {
@@ -11,7 +12,6 @@ import type {
 } from "@/data/types";
 import { useCare } from "@/state/app";
 import { useAuth } from "@/state/auth";
-import { space, type, useTheme } from "@/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { memo, useEffect } from "react";
@@ -120,9 +120,9 @@ export const SectionRenderer = memo(function SectionRenderer({
       <View
         style={{
           marginHorizontal: space.xl,
-          borderRadius: 28,
+          borderRadius: uiRadius.hero,
           overflow: "hidden",
-          minHeight: 290,
+          minHeight: uiMetrics.heroMinHeight,
         }}
       >
         <Animated.Image
@@ -140,8 +140,8 @@ export const SectionRenderer = memo(function SectionRenderer({
             style={{
               alignSelf: "flex-start",
               color: palette.white,
-              backgroundColor: palette.white + "25",
-              borderRadius: 18,
+              backgroundColor: palette.whiteTranslucent,
+              borderRadius: uiRadius.lg,
               paddingHorizontal: space.md,
               paddingVertical: space.xs,
               fontSize: type.micro,
@@ -156,10 +156,10 @@ export const SectionRenderer = memo(function SectionRenderer({
           <Txt
             style={{
               fontSize: type.title,
-              lineHeight: 31,
+              lineHeight: uiLineHeight.title,
               fontWeight: "900",
               color: palette.white,
-              maxWidth: 250,
+              maxWidth: uiMetrics.heroTextWidth,
             }}
           >
             {h.greeting.replace("Lakshmi garu", name)}
@@ -167,20 +167,20 @@ export const SectionRenderer = memo(function SectionRenderer({
           <Txt
             style={{
               fontSize: type.small,
-              lineHeight: 19,
-              color: palette.white + "CC",
+              lineHeight: uiLineHeight.body,
+              color: palette.onDarkSecondary,
             }}
           >
             {h.sub}
           </Txt>
           <View style={[styles.row, { flexWrap: "wrap" }]}>
-            <Pressable
+            <Pressable accessibilityRole="button"
               onPress={() => router.push("/booking")}
               style={{
                 backgroundColor: palette.white,
-                borderRadius: 30,
+                borderRadius: uiRadius.banner,
                 padding: space.lg,
-                minHeight: 48,
+                minHeight: uiMetrics.touch,
                 flexBasis: "45%",
                 flexGrow: 1,
                 flexShrink: 1,
@@ -189,14 +189,14 @@ export const SectionRenderer = memo(function SectionRenderer({
             >
               <Txt style={{ fontWeight: "800", textAlign: "center" }}>{h.cta}</Txt>
             </Pressable>
-            <Pressable
+            <Pressable accessibilityRole="button"
               onPress={() => router.push("/contact")}
               style={{
                 borderWidth: 1,
-                borderColor: palette.white + "66",
-                borderRadius: 30,
+                borderColor: palette.onDarkBorder,
+                borderRadius: uiRadius.banner,
                 padding: space.lg,
-                minHeight: 48,
+                minHeight: uiMetrics.touch,
                 flexBasis: "45%",
                 flexGrow: 1,
                 flexShrink: 1,
@@ -214,9 +214,9 @@ export const SectionRenderer = memo(function SectionRenderer({
                 key={stat.label}
                 style={{
                   flex: 1,
-                  borderRadius: 15,
+                  borderRadius: uiRadius.stat,
                   padding: space.md,
-                  backgroundColor: palette.white + "28",
+                  backgroundColor: palette.glass,
                   alignItems: "center",
                   gap: space.xxs,
                 }}
@@ -231,7 +231,7 @@ export const SectionRenderer = memo(function SectionRenderer({
                   {stat.value}
                 </Txt>
                 <Txt
-                  style={{ color: palette.white + "BB", fontSize: type.micro }}
+                  style={{ color: palette.onDarkMuted, fontSize: type.micro }}
                 >
                   {stat.label}
                 </Txt>
@@ -253,7 +253,7 @@ export const SectionRenderer = memo(function SectionRenderer({
           contentContainerStyle={{ paddingHorizontal: space.xl, gap: space.sm }}
         >
           {(s.items as ChipItem[]).map((c) => (
-            <Pressable
+            <Pressable accessibilityRole="button"
               onPress={() =>
                 router.push({
                   pathname: "/doctors",
@@ -265,10 +265,10 @@ export const SectionRenderer = memo(function SectionRenderer({
                 styles.row,
                 {
                   backgroundColor: palette.white,
-                  borderRadius: 30,
+                  borderRadius: uiRadius.banner,
                   padding: space.sm,
                   paddingRight: space.lg,
-                  minHeight: 54,
+                  minHeight: uiMetrics.chipHeight,
                   borderWidth: 1,
                   borderColor: palette.line,
                 },
@@ -277,7 +277,7 @@ export const SectionRenderer = memo(function SectionRenderer({
               <View
                 style={{
                   backgroundColor: palette.paleGreen,
-                  borderRadius: 24,
+                  borderRadius: uiRadius.avatar,
                   padding: space.sm,
                 }}
               >
@@ -313,9 +313,9 @@ export const SectionRenderer = memo(function SectionRenderer({
             color: palette.white,
             borderWidth: 1,
             borderStyle: "dashed",
-            borderColor: palette.white + "80",
+            borderColor: palette.onDarkOutline,
             padding: space.xxs,
-            borderRadius: 6,
+            borderRadius: uiRadius.badge,
             fontSize: type.micro,
             fontWeight: "800",
           }}
@@ -330,7 +330,7 @@ export const SectionRenderer = memo(function SectionRenderer({
         <Txt style={styles.heading}>{s.title}</Txt>
         <View style={{ flexDirection: "row", gap: space.sm }}>
           {(s.items as QuickActionItem[]).map((q, i) => (
-            <Pressable
+            <Pressable accessibilityRole="button"
               key={q.id}
               onPress={() =>
                 router.push(
@@ -352,7 +352,7 @@ export const SectionRenderer = memo(function SectionRenderer({
                   palette.blue,
                   palette.purple,
                 ][i],
-                borderRadius: 20,
+                borderRadius: uiRadius.panel,
                 paddingVertical: space.md,
                 alignItems: "center",
                 gap: space.xs,
@@ -364,7 +364,7 @@ export const SectionRenderer = memo(function SectionRenderer({
                 style={{
                   backgroundColor: palette.white,
                   padding: space.md,
-                  borderRadius: 28,
+                  borderRadius: uiRadius.hero,
                 }}
               >
                 <Icon
@@ -409,7 +409,7 @@ export const SectionRenderer = memo(function SectionRenderer({
                 width: "48%",
                 flexGrow: 1,
                 backgroundColor: palette.white,
-                borderRadius: 20,
+                borderRadius: uiRadius.panel,
                 overflow: "hidden",
                 borderWidth: 1,
                 borderColor: palette.line,
@@ -418,7 +418,7 @@ export const SectionRenderer = memo(function SectionRenderer({
               <View>
                 <Image
                   source={{ uri: item.image }}
-                  style={{ height: 115, width: "100%" }}
+                  style={{ height: uiMetrics.serviceImage, width: "100%" }}
                 />
                 {!!item.badge && (
                   <Txt
@@ -427,8 +427,8 @@ export const SectionRenderer = memo(function SectionRenderer({
                       top: 8,
                       left: 8,
                       backgroundColor: config.theme.accent,
-                      color: palette.white,
-                      borderRadius: 16,
+                      color: palette.ink,
+                      borderRadius: uiRadius.tile,
                       paddingHorizontal: space.sm,
                       paddingVertical: space.xxs,
                       fontSize: type.micro,
@@ -444,7 +444,7 @@ export const SectionRenderer = memo(function SectionRenderer({
                   style={{
                     fontWeight: "800",
                     fontSize: type.small,
-                    minHeight: 34,
+                    minHeight: uiMetrics.serviceNameHeight,
                   }}
                 >
                   {item.name}

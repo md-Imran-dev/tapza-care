@@ -564,6 +564,12 @@ const messages: Record<string, readonly [string, string]> = {
   "Live configuration": ["लाइव कॉन्फ़िगरेशन", "లైవ్ కాన్ఫిగరేషన్"],
   "Test slow networks, server failures and empty states.": ["धीमे नेटवर्क, सर्वर असफलता और खाली सूचियां जांचें।", "నెమ్మది నెట్‌వర్క్, సర్వర్ వైఫల్యం మరియు ఖాళీ జాబితాలను పరీక్షించండి."],
 
+  "Next available ·": ["अगला उपलब्ध समय ·", "తదుపరి అందుబాటు ·"],
+  "Today · 6:30 PM": ["आज · शाम 6:30", "ఈరోజు · సాయంత్రం 6:30"],
+  "Today · 7:15 PM": ["आज · शाम 7:15", "ఈరోజు · సాయంత్రం 7:15"],
+  "Tomorrow · 10:00 AM": ["कल · सुबह 10:00", "రేపు · ఉదయం 10:00"],
+  "Tomorrow · 11:30 AM": ["कल · सुबह 11:30", "రేపు · ఉదయం 11:30"],
+
 };
 
 export const localeFor = (lang: Lang) =>

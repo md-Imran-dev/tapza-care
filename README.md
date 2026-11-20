@@ -111,3 +111,9 @@ npx eas-cli@latest build --platform android --profile preview
 
 Verify card → details → booking and back navigation on the rebuilt app before
 shipping; JavaScript tests and exports do not validate native transition behavior.
+
+### Requirement cleanup validation
+
+Doctor cards include next-slot text. Service booking uses a gesture-driven sheet with an animated success state. UI colors, spacing and type sizes come from the theme foundations. Loading placeholders cover Home, doctor cards, prescriptions and available slots. Tests are tracked in the repository.
+
+Current checks: lint, strict typecheck and 40 tests pass. A local standalone ARM64 release-mode APK was built and installed for validation. See `docs/PERFORMANCE_CHECK.md` for the bounded performance sample, enlarged-text checks and remaining validation limits.

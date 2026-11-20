@@ -1,3 +1,4 @@
+import { metrics as uiMetrics , radius as uiRadius , space, type, useTheme } from "@/theme";
 import { router } from "expo-router";
 import { Pressable, View } from "react-native";
 import Animated, {
@@ -7,7 +8,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useCare } from "../state/app";
-import { space, type, useTheme } from "../theme";
 import { Icon, styles, Txt } from "./ui";
 export function Header({ scroll }: { scroll?: SharedValue<number> }) {
   const palette = useTheme().colors;
@@ -25,7 +25,7 @@ export function Header({ scroll }: { scroll?: SharedValue<number> }) {
     <View
       style={{
         backgroundColor: t.secondary,
-        paddingTop: insets.top + 12,
+        paddingTop: insets.top + space.md,
         paddingHorizontal: space.xl,
         paddingBottom: space.md,
       }}
@@ -34,10 +34,10 @@ export function Header({ scroll }: { scroll?: SharedValue<number> }) {
         <View style={[styles.row, { flex: 1 }]}>
           <View
             style={{
-              height: 44,
-              width: 44,
-              borderRadius: 16,
-              backgroundColor: palette.white + "25",
+              height: uiMetrics.compactTouch,
+              width: uiMetrics.compactTouch,
+              borderRadius: uiRadius.tile,
+              backgroundColor: palette.whiteTranslucent,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -53,7 +53,7 @@ export function Header({ scroll }: { scroll?: SharedValue<number> }) {
             </Txt>
           </View>
           <View style={{ flex: 1 }}>
-            <Txt style={{ fontSize: type.micro, color: palette.white + "BB" }}>
+            <Txt style={{ fontSize: type.micro, color: palette.onDarkMuted }}>
               ⌖ Madhapur, Hyderabad
             </Txt>
             <Txt
@@ -82,11 +82,11 @@ export function Header({ scroll }: { scroll?: SharedValue<number> }) {
               }}
               onPress={() => void setLang(l)}
               style={{
-                minWidth: 44,
-                minHeight: 44,
-                borderRadius: 24,
+                minWidth: uiMetrics.compactTouch,
+                minHeight: uiMetrics.compactTouch,
+                borderRadius: uiRadius.avatar,
                 backgroundColor:
-                  l === lang ? palette.white : palette.white + "20",
+                  l === lang ? palette.white : palette.whiteTint,
                 alignItems: "center",
                 justifyContent: "center",
                 marginLeft: space.tiny,
@@ -112,14 +112,14 @@ export function Header({ scroll }: { scroll?: SharedValue<number> }) {
       )}
       {!!scroll && (
         <Animated.View style={[{ overflow: "hidden" }, a]}>
-          <Pressable
+          <Pressable accessibilityRole="button"
             onPress={() => router.push("/doctors")}
             style={[
               styles.row,
               {
                 backgroundColor: palette.white,
-                borderRadius: 20,
-                minHeight: 48,
+                borderRadius: uiRadius.panel,
+                minHeight: uiMetrics.touch,
                 marginTop: space.md,
                 paddingHorizontal: space.md,
               },

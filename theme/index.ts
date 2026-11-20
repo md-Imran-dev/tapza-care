@@ -4,6 +4,8 @@ import { useCare } from "../state/app";
 // Design foundations are centralized here; screens only consume tokens.
 export const space = {
   none: 0,
+  inset: 10,
+  labelGap: 3,
   hair: 1,
   tiny: 2,
   xxs: 4,
@@ -18,6 +20,7 @@ export const space = {
   huge: 40,
 };
 export const type = {
+  tiny: 10,
   micro: 11,
   caption: 12,
   small: 13,
@@ -29,13 +32,62 @@ export const type = {
   display: 30,
   hero: 34,
 };
-export const radius = { sm: 8, md: 12, lg: 18, card: 22, hero: 28, pill: 99 };
+export const radius = { xs: 5, badge: 6, sm: 8, md: 12, time: 13, input: 14, stat: 15, tile: 16, date: 17, lg: 18, panel: 20, card: 22, avatar: 24, doctor: 26, hero: 28, banner: 30, success: 60, pill: 99 };
+export const lineHeight = { caption: 18, body: 19, title: 31 };
+export const tracking = { title: -0.6, heading: -0.4, otp: 8 };
+export const metrics = {
+      dragHandleWidth: 44,
+      dragHandleHeight: 5,
+      successIcon: 48,
+      none: 0,
+      tickWidth: 2,
+      indicatorHeight: 3,
+      serviceNameHeight: 34,
+      compactTouch: 44,
+      chipHeight: 54,
+      bookingAvatar: 58,
+      dateTileWidth: 61,
+      timeTileHeight: 64,
+      dateTileWidthLarge: 72,
+      dateTileHeight: 76,
+      timeTileWidth: 80,
+      detailDateHeight: 84,
+      slotWidth: 88,
+      addressHeight: 100,
+      pickerCardWidth: 172,
+      doctorPortrait: 180,
+      doctorCardCompact: 76,
+      doctorCardWide: 112,
+      heroTextWidth: 250,
+      heroMinHeight: 290,
+      configEditorHeight: 320,
+      dialogMaxWidth: 420,
+      tabIcon: 21,
+      smallIcon: 18,
+      touch: 48,
+      button: 52,
+      icon: 22,
+      avatar: 56,
+      hero: 300,
+      doctorImage: 150,
+      serviceImage: 115,
+      cardWidth: 235,
+      tabHeight: 88,
+    };
+
 export function deriveTheme(theme: ThemeColors) {
   const festive = theme.festival?.name === "diwali";
   return {
     colors: {
       ...theme,
       white: "#FFFFFF",
+      whiteTranslucent: "#FFFFFF25",
+      whiteTint: "#FFFFFF20",
+      glass: "#FFFFFF14",
+      onDarkSecondary: "#FFFFFFCC",
+      onDarkMuted: "#FFFFFFBB",
+      onDarkBorder: "#FFFFFF66",
+      onDarkOutline: "#FFFFFF80",
       ink: theme.textPrimary,
       muted: theme.textSecondary,
       line: festive ? "#E7D4BE" : "#DDE8E3",
@@ -50,25 +102,19 @@ export function deriveTheme(theme: ThemeColors) {
       amber: "#854D0E",
       red: "#991B1B",
       overlay: "rgba(5,20,18,0.78)",
-      heroFade: "rgba(5,20,18,0.42)",
+      heroFade: "rgba(5,20,18,0.72)",
       inactive: festive ? "#80614D" : "#536F65",
       transparent: "transparent",
+      tabActive: festive ? theme.primary : "#62568F",
+      tabBackground: theme.background,
     },
     space,
     type,
     radius,
-    metrics: {
-      touch: 48,
-      button: 52,
-      icon: 22,
-      avatar: 56,
-      hero: 300,
-      doctorImage: 150,
-      serviceImage: 115,
-      cardWidth: 235,
-      tabHeight: 88,
-    },
-    motion: { reveal: 400, parallax: 0.12 },
+    lineHeight,
+    tracking,
+    metrics,
+    motion: { reveal: 400, parallax: 0.12, dismissDistance: 110, sheetSpring: { damping: 24, stiffness: 240 }, successFade: 220, successZoom: 320 },
   };
 }
 export function useTheme() {

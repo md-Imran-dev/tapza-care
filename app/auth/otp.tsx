@@ -1,8 +1,8 @@
+import { tracking as uiTracking , useTheme } from "@/theme";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { Button, Txt, styles } from "@/components/ui";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useAuth } from "@/state/auth";
-import { useTheme } from "@/theme";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { TextInput } from "react-native";
@@ -45,7 +45,7 @@ export default function Otp() {
           color: t.colors.textPrimary,
           padding: t.space.lg,
           fontSize: t.type.title,
-          letterSpacing: 8,
+          letterSpacing: uiTracking.otp,
           textAlign: "center",
         }}
       />

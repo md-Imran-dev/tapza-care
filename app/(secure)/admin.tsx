@@ -1,7 +1,7 @@
+import { metrics as uiMetrics , useTheme } from "@/theme";
 import { Page } from "@/components/Page";
 import { Button, Card, styles, Txt } from "@/components/ui";
 import { useCare } from "@/state/app";
-import { useTheme } from "@/theme";
 import { useState } from "react";
 import { Switch, TextInput, View } from "react-native";
 export default function Admin() {
@@ -88,7 +88,7 @@ export default function Admin() {
         autoCapitalize="none"
         autoCorrect={false}
         style={{
-          minHeight: 320,
+          minHeight: uiMetrics.configEditorHeight,
           borderRadius: t.radius.lg,
           padding: t.space.lg,
           backgroundColor: t.colors.secondary,

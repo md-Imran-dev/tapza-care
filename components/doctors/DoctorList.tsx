@@ -51,7 +51,7 @@ export function DoctorList() {
               fontSize: t.type.body,
             }}
           />
-          {status === "loading" && <Skeleton />}
+          {status === "loading" && <Skeleton kind="doctors" />}
           {status === "error" && (
             <EmptyState
               title="Doctors couldn’t refresh"

@@ -1,9 +1,10 @@
+import { metrics as uiMetrics , useTheme } from "@/theme";
+import { Skeleton } from "../States";
 import type { Slot } from "@/data/types";
 import { useTranslation } from "@/hooks/useTranslation";
 import { localDateKey } from "@/lib/dates";
-import { useTheme } from "@/theme";
 import { useMemo } from "react";
-import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
+import { Pressable, ScrollView, View } from "react-native";
 import { Button, styles, Txt } from "../ui";
 
 type Props = {
@@ -62,7 +63,7 @@ export function AppointmentPicker({
             disabled={disabled}
             onPress={() => onDate(day.id)}
             style={{
-              minHeight: 56,
+              minHeight: uiMetrics.avatar,
               justifyContent: "center",
               padding: t.space.md,
               borderRadius: t.radius.md,
@@ -78,7 +79,7 @@ export function AppointmentPicker({
       </ScrollView>
       <Txt style={styles.heading}>Available times</Txt>
       {loading ? (
-        <ActivityIndicator color={t.colors.primary} />
+        <Skeleton kind="slots" />
       ) : error ? (
         <Button title="Retry available times" onPress={onRetry} />
       ) : slots.some((s) => s.available) ? (
@@ -97,7 +98,7 @@ export function AppointmentPicker({
               disabled={disabled || !slot.available}
               onPress={() => onSlot(slot.id)}
               style={{
-                minHeight: 48,
+                minHeight: uiMetrics.touch,
                 padding: t.space.md,
                 justifyContent: "center",
                 borderRadius: t.radius.md,

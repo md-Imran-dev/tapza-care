@@ -1,5 +1,5 @@
+import { metrics as uiMetrics , useTheme } from "@/theme";
 import type { Doctor, Prescription } from "@/data/types";
-import { useTheme } from "@/theme";
 import { memo, useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Txt } from "../ui";
@@ -64,7 +64,7 @@ export const DoctorChooser = memo(function DoctorChooser({
             }}
             style={{
               flexGrow: 1,
-              minHeight: 48,
+              minHeight: uiMetrics.touch,
               padding: t.space.md,
               borderRadius: t.radius.lg,
               borderWidth: 1,

@@ -1,3 +1,4 @@
+import { metrics as uiMetrics , radius as uiRadius , space, type, useTheme } from "@/theme";
 import { useTranslation } from "@/hooks/useTranslation";
 import { TransitionScreen } from "@/components/motion/TransitionScreen";
 import { DoctorPhoto } from "@/components/doctors/DoctorPhoto";
@@ -26,7 +27,6 @@ import { DOCTORS } from "../../data/mockData";
 import { useResource } from "../../hooks/useResource";
 import { getSlots } from "../../lib/api";
 import { useCare } from "../../state/app";
-import { space, type, useTheme } from "../../theme";
 export default function Booking() {
   const palette = useTheme().colors;
   const { locale } = useTranslation();
@@ -98,7 +98,7 @@ export default function Booking() {
         backgroundColor: palette.overlay,
       }}
     >
-      <Pressable
+      <Pressable accessibilityRole="button"
         accessibilityLabel="Close booking"
         onPress={close}
         style={{ flex: 1 }}
@@ -107,10 +107,10 @@ export default function Booking() {
         style={[
           {
             height: "90%",
-            borderTopLeftRadius: 30,
-            borderTopRightRadius: 30,
+            borderTopLeftRadius: uiRadius.banner,
+            borderTopRightRadius: uiRadius.banner,
             backgroundColor: palette.white,
-            paddingBottom: Math.max(20, inset.bottom),
+            paddingBottom: Math.max(space.xl, inset.bottom),
           },
           a,
         ]}
@@ -119,10 +119,10 @@ export default function Booking() {
           <View style={{ padding: space.md, alignItems: "center" }}>
             <View
               style={{
-                height: 5,
-                width: 44,
+                height: uiMetrics.dragHandleHeight,
+                width: uiMetrics.compactTouch,
                 backgroundColor: palette.line,
-                borderRadius: 5,
+                borderRadius: uiRadius.xs,
               }}
             />
           </View>
@@ -136,7 +136,7 @@ export default function Booking() {
               style={{
                 backgroundColor: palette.paleGreen,
                 padding: space.hero,
-                borderRadius: 60,
+                borderRadius: uiRadius.success,
               }}
             >
               <Icon name="check" color={palette.green} size={48} />
@@ -178,7 +178,7 @@ export default function Booking() {
               <DoctorPhoto
                 doctor={d}
                 shared={doctorId === d.id}
-                style={{ height: 58, width: 58, borderRadius: 18 }}
+                style={{ height: uiMetrics.bookingAvatar, width: uiMetrics.bookingAvatar, borderRadius: uiRadius.lg }}
               />
               <View style={{ flex: 1, gap: space.tiny }}>
                 <Txt localize={false} style={styles.heading}>{d.name}</Txt>
@@ -189,10 +189,10 @@ export default function Booking() {
                   {d.clinic}
                 </Txt>
               </View>
-              <Pressable
+              <Pressable accessibilityRole="button"
                 accessibilityLabel="Close booking"
                 onPress={close}
-                style={{ padding: space.md, minHeight: 44 }}
+                style={{ padding: space.md, minHeight: uiMetrics.compactTouch }}
               >
                 <Icon name="close" />
               </Pressable>
@@ -225,7 +225,7 @@ export default function Booking() {
                 contentContainerStyle={{ gap: space.sm }}
               >
                 {dates.map((dt) => (
-                  <Pressable
+                  <Pressable accessibilityRole="button"
                     key={dt.iso}
                     disabled={status === "pending"}
                     onPress={() => {
@@ -233,11 +233,11 @@ export default function Booking() {
                       setSlot("");
                     }}
                     style={{
-                      minWidth: 61,
-                      minHeight: 76,
+                      minWidth: uiMetrics.dateTileWidth,
+                      minHeight: uiMetrics.dateTileHeight,
                       backgroundColor:
                         date === dt.iso ? t.primary : t.background,
-                      borderRadius: 17,
+                      borderRadius: uiRadius.date,
                       padding: space.md,
                       alignItems: "center",
                       gap: space.xxs,
@@ -325,10 +325,10 @@ export default function Booking() {
                               setStatus("idle");
                             }}
                             style={{
-                              minWidth: 88,
-                              minHeight: 44,
+                              minWidth: uiMetrics.slotWidth,
+                              minHeight: uiMetrics.compactTouch,
                               padding: space.md,
-                              borderRadius: 13,
+                              borderRadius: uiRadius.time,
                               borderWidth: 1,
                               borderColor:
                                 slot === s.id ? t.primary : palette.line,

@@ -41,8 +41,7 @@ expo-env.d.ts
 # Metro
 .metro-health-check*
 
-# Local tests and test coverage
-/__tests__/
+# Test coverage
 coverage/
 
 # Logs and debug

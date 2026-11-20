@@ -18,6 +18,8 @@ jest.mock("react-native-reanimated", () => {
     __esModule: true,
     default: Animated,
     Easing,
+    FadeIn: { duration: () => undefined },
+    ZoomIn: { duration: () => undefined },
     SharedTransition: { duration: () => ({ easing: () => ({}) }) },
     SharedTransitionBoundary: ({ children }) => children,
     useReducedMotion: () => false,

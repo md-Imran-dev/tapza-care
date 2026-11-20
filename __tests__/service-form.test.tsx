@@ -1,0 +1,27 @@
+import { expect, jest, test } from "@jest/globals";
+import { fireEvent, render, screen } from "@testing-library/react-native";
+import { ServiceBookingForm } from "../components/services/ServiceBookingForm";
+import { CONFIG_NORMAL } from "../data/mockData";
+import { useResource } from "../hooks/useResource";
+import { localDateKey } from "../lib/dates";
+import { findService } from "../lib/services";
+import { useCare } from "../state/app";
+jest.mock("../hooks/useResource");
+test("home collection requires address and an available time before confirming", async () => {
+  const service = findService(CONFIG_NORMAL, "s4")!;
+  const date = localDateKey();
+  const slotId = `service:s4|${date}|8`;
+  jest.mocked(useResource).mockReturnValue({ data: [{ id: slotId, doctorId: "service:s4", startsAt: `${date}T23:59:59+05:30`, label: "11:59 PM", available: true }], loading: false, error: null, retry: jest.fn() });
+  const book = jest.spyOn(useCare.getState(), "book").mockResolvedValue(true);
+  await render(<ServiceBookingForm service={service} />);
+  await fireEvent.press(screen.getByText("Confirm home collection"));
+  expect(book).not.toHaveBeenCalled();
+  await fireEvent.press(screen.getByText("11:59 PM"));
+  await fireEvent.press(screen.getByText("Confirm home collection"));
+  expect(book).not.toHaveBeenCalled();
+  await fireEvent.changeText(screen.getByLabelText("Collection address"), "Flat 10, Demo Street, Hyderabad 500081");
+  await fireEvent.press(screen.getByText("Confirm home collection"));
+  expect(book).toHaveBeenCalledWith("service:s4", date, slotId, expect.objectContaining({ serviceName: "Home Sample Collection", priceInr: 0, fulfillment: "home" }));
+  expect(screen.getByText("Service booking confirmed")).toBeTruthy();
+  book.mockRestore();
+});
