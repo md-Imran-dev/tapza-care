@@ -1,7 +1,8 @@
 import { Tabs } from "expo-router";
+import { useWindowDimensions } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon } from "../../../components/ui";
 import { useCare } from "../../../state/app";
-import { useTheme } from "../../../theme";
 const routeNames = {
   home: "index",
   bookings: "bookings",
@@ -9,7 +10,8 @@ const routeNames = {
   profile: "profile",
 } as const;
 export default function Layout() {
-  const t = useTheme();
+  const insets = useSafeAreaInsets();
+  const { fontScale } = useWindowDimensions();
   const lang = useCare((s) => s.lang);
   const tabs = useCare((s) => s.config.tabs);
   const labels =
@@ -20,22 +22,36 @@ export default function Layout() {
         : null;
   return (
     <Tabs
+      safeAreaInsets={{ bottom: 0 }}
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: t.colors.primary,
-        tabBarInactiveTintColor: t.colors.inactive,
+        tabBarHideOnKeyboard: true,
+        tabBarLabelPosition: "below-icon",
+        tabBarActiveTintColor: "#7A73AD",
+        tabBarInactiveTintColor: "#7C8586",
         tabBarStyle: {
-          minHeight: t.metrics.tabHeight,
-          paddingTop: t.space.sm,
-          paddingBottom: t.space.lg,
-          backgroundColor: t.colors.surface,
-          borderTopColor: t.colors.line,
+          height: 64 + Math.max(0, fontScale - 1) * 20,
+          paddingTop: 8,
+          paddingBottom: 8,
+          marginHorizontal: 12,
+          marginBottom: Math.max(insets.bottom, 8),
+          marginTop: 6,
+          backgroundColor: "#F2F6F5",
+          borderRadius: 26,
+          borderTopWidth: 0,
+          borderWidth: 1,
+          borderColor: "#FFFFFF",
+          shadowColor: "#293F3A",
+          shadowOffset: { width: 0, height: 3 },
+          shadowOpacity: 0.12,
+          shadowRadius: 6,
+          elevation: 5,
         },
-        tabBarLabelStyle: { fontSize: t.type.micro, fontWeight: "800" },
-        tabBarActiveBackgroundColor: t.colors.primary + "0C",
+        tabBarLabelStyle: { fontSize: 10, fontWeight: "500", marginTop: 3 },
+        tabBarActiveBackgroundColor: "transparent",
         tabBarItemStyle: {
-          borderRadius: t.radius.lg,
-          marginHorizontal: t.space.xxs,
+          minHeight: 48,
+          paddingHorizontal: 2,
         },
       }}
     >
@@ -62,9 +78,9 @@ export default function Layout() {
                 screen,
               tabBarIcon: ({ color }) => (
                 <Icon
-                  name={tab?.icon ?? "home"}
+                  name={screen === "profile" ? "profile" : screen === "bookings" ? "calendarOutline" : tab?.icon ?? "home"}
                   color={String(color)}
-                  size={t.metrics.icon}
+                  size={21}
                 />
               ),
             }}

@@ -1,3 +1,4 @@
+import { router } from "expo-router";
 import { Page } from "@/components/Page";
 import { PrescriptionContent } from "@/components/prescriptions/PrescriptionContent";
 import { Button, Txt, styles } from "@/components/ui";
@@ -5,7 +6,6 @@ import { enableReminders } from "@/lib/reminders";
 import { useCare } from "@/state/app";
 import { useState } from "react";
 export default function Reminders() {
-  const [open, setOpen] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
   const [scheduling, setScheduling] = useState(false);
   const prescriptions = useCare((s) => s.prescriptions);
@@ -36,7 +36,10 @@ export default function Reminders() {
           {!!notice && <Txt accessibilityRole="alert">{notice}</Txt>}
         </>
       }
-      <PrescriptionContent open={open} onSelect={setOpen} />
+      <PrescriptionContent
+        open={null}
+        onSelect={(id) => router.push({ pathname: "/prescription/[id]", params: { id } })}
+      />
     </Page>
   );
 }

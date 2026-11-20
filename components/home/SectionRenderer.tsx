@@ -1,3 +1,4 @@
+import { DoctorCard } from "@/components/doctors/DoctorCard";
 import { Button, Icon, styles, Txt } from "@/components/ui";
 import type {
   ChipItem,
@@ -15,6 +16,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { memo, useEffect } from "react";
 import {
+  useWindowDimensions,
   Image,
   ImageBackground,
   Pressable,
@@ -28,8 +30,6 @@ import Animated, {
   withTiming,
   type SharedValue,
 } from "react-native-reanimated";
-const book = (id: string) =>
-  router.push({ pathname: "/booking", params: { doctorId: id } });
 function Band({
   section,
   children,
@@ -77,6 +77,8 @@ export const SectionRenderer = memo(function SectionRenderer({
   visible?: boolean;
   scroll: SharedValue<number>;
 }) {
+  const { width } = useWindowDimensions();
+  const doctorCardWidth = Math.min(400, Math.max(0, width - space.xl * 2));
   const palette = useTheme().colors;
   const config = useCare((state) => state.config);
   const doctors = useCare((state) => state.doctors);
@@ -173,7 +175,7 @@ export const SectionRenderer = memo(function SectionRenderer({
           </Txt>
           <View style={styles.row}>
             <Pressable
-              onPress={() => book("d1")}
+              onPress={() => router.push("/booking")}
               style={{
                 backgroundColor: palette.white,
                 borderRadius: 30,
@@ -326,7 +328,7 @@ export const SectionRenderer = memo(function SectionRenderer({
                 router.push(
                   (
                     [
-                      "/doctors",
+                      "/booking",
                       "/prescriptions",
                       "/reminders",
                       "/family",
@@ -488,55 +490,8 @@ export const SectionRenderer = memo(function SectionRenderer({
             const d = doctors.find((d) => d.id === it.doctorId);
             if (!d) return null;
             return (
-              <View
-                key={d.id}
-                style={{
-                  width: 235,
-                  borderRadius: 24,
-                  backgroundColor: palette.white,
-                  overflow: "hidden",
-                }}
-              >
-                <Pressable
-                  onPress={() =>
-                    router.push({
-                      pathname: "/doctor/[id]",
-                      params: { id: d.id },
-                    })
-                  }
-                >
-                  <Image
-                    source={{ uri: d.photoUrl }}
-                    style={{ height: 150, width: "100%" }}
-                  />
-                  <View style={{ padding: space.md, gap: space.xxs }}>
-                    <Txt style={{ fontWeight: "800" }}>{d.name}</Txt>
-                    <Txt style={styles.sub}>
-                      {d.specialty} · {d.expYears} yrs
-                    </Txt>
-                    <Txt style={styles.sub}>
-                      ★ {d.rating} · {d.nextSlot}
-                    </Txt>
-                    <Txt style={{ fontSize: type.micro, color: palette.muted }}>
-                      {d.languages.join(" · ")}
-                    </Txt>
-                  </View>
-                </Pressable>
-                <View
-                  style={[
-                    styles.row,
-                    {
-                      padding: space.md,
-                      paddingTop: space.none,
-                      justifyContent: "space-between",
-                    },
-                  ]}
-                >
-                  <Txt style={{ fontWeight: "900", fontSize: type.lead }}>
-                    ₹{d.feeInr}
-                  </Txt>
-                  <Button title="Book" onPress={() => book(d.id)} />
-                </View>
+              <View key={d.id} style={{ width: doctorCardWidth }}>
+                <DoctorCard doctor={d} />
               </View>
             );
           })}

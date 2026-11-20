@@ -6,7 +6,6 @@ export default function Family() {
   const name = useAuth((s) => s.session?.name);
   return (
     <Page>
-      <Button title="‹ Back" secondary onPress={() => router.back()} />
       <Txt style={styles.title}>Your family</Txt>
       <Txt style={styles.sub}>A little care for everyone you love</Txt>
       {[

@@ -1,43 +1,22 @@
-import { Page } from "@/components/Page";
+import { DoctorDetails } from "@/components/doctors/DoctorDetails";
+import { Txt } from "@/components/ui";
+import { useCare } from "@/state/app";
+import { useTheme } from "@/theme";
 import { router, useLocalSearchParams } from "expo-router";
-import { Image } from "react-native";
-import { Button, Card, styles, Txt } from "../../../components/ui";
-import { useCare } from "../../../state/app";
+import { ScrollView } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+
 export default function Doctor() {
-  const { id } = useLocalSearchParams<{
-    id: string;
-  }>();
-  const d = useCare((s) => s.doctors.find((x) => x.id === id));
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const doctor = useCare((s) => s.doctors.find((d) => d.id === id));
+  const t = useTheme();
   return (
-    <Page>
-      <Button title="‹ Back" secondary onPress={() => router.back()} />
-      {d ? (
-        <>
-          <Image
-            source={{ uri: d.photoUrl }}
-            style={{ height: 300, borderRadius: 28, width: "100%" }}
-          />
-          <Txt style={styles.title}>{d.name}</Txt>
-          <Txt>{d.specialty}</Txt>
-          <Card>
-            <Txt style={styles.heading}>
-              ★ {d.rating} · {d.expYears} years of care
-            </Txt>
-            <Txt style={styles.sub}>{d.clinic}</Txt>
-            <Txt style={styles.sub}>Speaks {d.languages.join(", ")}</Txt>
-            <Txt style={styles.sub}>Next available · {d.nextSlot}</Txt>
-          </Card>
-          <Txt style={styles.heading}>₹{d.feeInr} · Pay at clinic</Txt>
-          <Button
-            title="Book a visit"
-            onPress={() =>
-              router.push({ pathname: "/booking", params: { doctorId: d.id } })
-            }
-          />
-        </>
-      ) : (
-        <Txt>Doctor not found.</Txt>
-      )}
-    </Page>
+    <SafeAreaView style={{ flex: 1, backgroundColor: t.colors.background }}>
+      <ScrollView contentContainerStyle={{ padding: t.space.md, gap: t.space.md }}>
+        {doctor ? (
+          <DoctorDetails key={doctor.id} doctor={doctor} onBook={(date, slotId) => router.push({ pathname: "/booking", params: { doctorId: doctor.id, date, slotId } })} />
+        ) : <Txt>Doctor not found.</Txt>}
+      </ScrollView>
+    </SafeAreaView>
   );
 }

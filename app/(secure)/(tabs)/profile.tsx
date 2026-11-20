@@ -1,15 +1,32 @@
 import { Page } from "@/components/Page";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Button, Card, styles, Txt } from "@/components/ui";
 import { useCare } from "@/state/app";
 import { useAuth } from "@/state/auth";
 import { useTheme } from "@/theme";
 import { router } from "expo-router";
+import { useState } from "react";
 import { Alert, View } from "react-native";
 export default function Profile() {
   const config = useCare((s) => s.config);
   const festival = useCare((s) => s.festival);
   const session = useAuth((s) => s.session);
   const t = useTheme();
+  const [confirmLogout, setConfirmLogout] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+  async function signOut() {
+    if (signingOut) return;
+    setSigningOut(true);
+    try {
+      await useAuth.getState().logout();
+      setConfirmLogout(false);
+    } catch {
+      setConfirmLogout(false);
+      Alert.alert("Could not sign out", "Please retry.");
+    } finally {
+      setSigningOut(false);
+    }
+  }
   return (
     <Page>
       <Txt style={styles.title}>Your family, our care</Txt>
@@ -68,12 +85,16 @@ export default function Profile() {
       <Button
         title="Sign out"
         secondary
-        onPress={() => {
-          void useAuth
-            .getState()
-            .logout()
-            .catch(() => Alert.alert("Could not sign out", "Please retry."));
-        }}
+        onPress={() => setConfirmLogout(true)}
+      />
+      <ConfirmDialog
+        visible={confirmLogout}
+        title="Sign out?"
+        message="Are you sure you want to sign out of Tapza Care?"
+        confirmLabel="Sign out"
+        busy={signingOut}
+        onCancel={() => setConfirmLogout(false)}
+        onConfirm={() => void signOut()}
       />
       <Txt style={styles.sub}>
         Tapza Care · Assessment demo · No real bookings or messages

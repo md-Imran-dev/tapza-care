@@ -10,7 +10,7 @@ export default function PrescriptionDetail() {
       <Txt style={styles.sub}>Care continues after your clinic visit</Txt>
       <PrescriptionContent
         open={id}
-        onSelect={() => router.replace("/prescriptions")}
+        onSelect={(id) => router.push({ pathname: "/prescription/[id]", params: { id } })}
       />
     </Page>
   );

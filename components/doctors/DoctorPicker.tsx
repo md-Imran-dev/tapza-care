@@ -1,0 +1,41 @@
+import { memo } from "react";
+import { FlatList, Image, Pressable, View } from "react-native";
+import type { Doctor } from "@/data/types";
+import { useTheme } from "@/theme";
+import { Txt, styles } from "../ui";
+
+export const DoctorPicker = memo(function DoctorPicker({ doctors, selectedId, disabled = false, onSelect }: {
+  doctors: Doctor[];
+  selectedId: string | null;
+  disabled?: boolean;
+  onSelect: (id: string) => void;
+}) {
+  const t = useTheme();
+  return (
+    <View style={{ gap: t.space.sm, paddingBottom: t.space.md }}>
+      <Txt style={[styles.heading, { paddingHorizontal: t.space.xl }]}>Choose your doctor</Txt>
+      <FlatList
+        horizontal
+        data={doctors}
+        keyExtractor={(doctor) => doctor.id}
+        showsHorizontalScrollIndicator={false}
+        initialNumToRender={4}
+        contentContainerStyle={{ paddingHorizontal: t.space.xl, gap: t.space.sm }}
+        renderItem={({ item }) => (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Select ${item.name}`}
+            accessibilityState={{ selected: selectedId === item.id, disabled }}
+            disabled={disabled}
+            onPress={() => onSelect(item.id)}
+            style={{ width: 172, padding: t.space.md, borderRadius: t.radius.lg, borderWidth: 1, borderColor: selectedId === item.id ? t.colors.primary : t.colors.line, backgroundColor: selectedId === item.id ? t.colors.paleGreen : t.colors.background, gap: t.space.xs }}
+          >
+            <Image source={{ uri: item.photoUrl }} style={{ width: 44, height: 44, borderRadius: 14 }} />
+            <Txt style={{ fontWeight: "800" }}>{item.name}</Txt>
+            <Txt style={styles.sub}>{item.specialty} · ★ {item.rating}</Txt>
+          </Pressable>
+        )}
+      />
+    </View>
+  );
+});

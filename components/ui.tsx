@@ -33,6 +33,9 @@ export function Card({ style, ...props }: ViewProps) {
   );
 }
 const icons: Record<string, [string, string]> = {
+  profile: ["person.crop.circle", "account_circle"],
+  calendarOutline: ["calendar", "calendar_today"],
+  phone: ["phone", "call"],
   home: ["house", "home"],
   calendar: ["calendar.badge.plus", "calendar_add_on"],
   rx: ["doc.text", "description"],

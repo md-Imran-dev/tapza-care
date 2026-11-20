@@ -17,6 +17,7 @@ import Animated, {
   ZoomIn,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { DoctorPicker } from "../../components/doctors/DoctorPicker";
 import { EmptyState, Skeleton } from "../../components/States";
 import { Button, Icon, styles, Txt } from "../../components/ui";
 import { DOCTORS } from "../../data/mockData";
@@ -27,15 +28,22 @@ import { space, type, useTheme } from "../../theme";
 export default function Booking() {
   const palette = useTheme().colors;
   const {
-    doctorId = "d1",
+    doctorId,
     service,
     price,
+    date: initialDate,
+    slotId: initialSlot,
   } = useLocalSearchParams<{
     doctorId: string;
     service?: string;
     price?: string;
+    date?: string;
+    slotId?: string;
   }>();
-  const d = DOCTORS.find((d) => d.id === doctorId) ?? DOCTORS[0];
+  const loadedDoctors = useCare((s) => s.doctors);
+  const doctors = loadedDoctors.length ? loadedDoctors : DOCTORS;
+  const [selectedDoctorId, setSelectedDoctorId] = useState<string | null>(doctorId ?? null);
+  const d = doctors.find((doctor) => doctor.id === selectedDoctorId) ?? doctors[0];
   const t = useCare((s) => s.config.theme);
   const book = useCare((s) => s.book);
   const offline = useCare((s) => s.offline);
@@ -54,16 +62,17 @@ export default function Booking() {
       }),
     [],
   );
-  const [date, setDate] = useState(dates[0].iso);
-  const [slot, setSlot] = useState("");
+  const [date, setDate] = useState(dates.some((d) => d.iso === initialDate) ? initialDate! : dates[0].iso);
+  const [slot, setSlot] = useState(initialSlot ?? "");
   const network = useCare((s) => s.network);
   const {
     data: slotsData,
     loading,
     error: slotsError,
     retry,
-  } = useResource(() => getSlots(d.id, date), [d.id, date, network]);
-  const slots = slotsData ?? [];
+  } = useResource(() => selectedDoctorId ? getSlots(d.id, date) : Promise.resolve([]), [selectedDoctorId, d.id, date, network]);
+  const slots = (slotsData ?? []).filter((s) => s.doctorId === d.id && s.startsAt.startsWith(date));
+  const validSlot = slots.some((s) => s.id === slot && s.available && s.startsAt.startsWith(date));
   const [status, setStatus] = useState<
     "idle" | "pending" | "success" | "error"
   >("idle");
@@ -144,6 +153,17 @@ export default function Booking() {
           </Animated.View>
         ) : (
           <>
+            <DoctorPicker
+              doctors={doctors}
+              selectedId={selectedDoctorId}
+              disabled={status === "pending"}
+              onSelect={(id) => {
+                setSelectedDoctorId(id);
+                setSlot("");
+                setStatus("idle");
+              }}
+            />
+            {selectedDoctorId ? <>
             <View
               style={[
                 styles.row,
@@ -360,8 +380,9 @@ export default function Booking() {
                         (slots.find((s) => s.id === slot)?.label ?? slot)
                       : "Select a slot to continue"
                 }
-                disabled={!slot || loading || status === "pending"}
+                disabled={!validSlot || loading || !!slotsError || status === "pending"}
                 onPress={async () => {
+                  if (!validSlot || loading || slotsError || status === "pending") return;
                   setStatus("pending");
                   const ok = await book(d.id, date, slot);
                   setStatus(ok ? "success" : "error");
@@ -380,6 +401,7 @@ export default function Booking() {
                 Free reschedule · Care for your whole family
               </Txt>
             </View>
+            </> : <Txt style={{ padding: space.xl }}>Select a doctor to see dates and available times.</Txt>}
           </>
         )}
       </Animated.View>

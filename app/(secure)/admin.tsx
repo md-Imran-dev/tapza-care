@@ -2,7 +2,6 @@ import { Page } from "@/components/Page";
 import { Button, Card, styles, Txt } from "@/components/ui";
 import { useCare } from "@/state/app";
 import { useTheme } from "@/theme";
-import { router } from "expo-router";
 import { useState } from "react";
 import { Switch, TextInput, View } from "react-native";
 export default function Admin() {
@@ -15,11 +14,6 @@ export default function Admin() {
   const [message, setMessage] = useState("");
   return (
     <Page>
-      <Button
-        title="‹ Back to profile"
-        secondary
-        onPress={() => router.back()}
-      />
       <Txt style={styles.title}>Demo lab</Txt>
       <Txt style={styles.sub}>
         Test slow networks, server failures and empty states.

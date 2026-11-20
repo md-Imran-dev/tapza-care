@@ -10,7 +10,7 @@ export function PrescriptionContent({
   onSelect,
 }: {
   open: string | null;
-  onSelect: (id: string | null) => void;
+  onSelect: (id: string) => void;
 }) {
   const doses = useCare((s) => s.doses);
   const prescriptions = useCare((s) => s.prescriptions);
@@ -33,11 +33,6 @@ export function PrescriptionContent({
       ) : null}
       {rx ? (
         <>
-          <Button
-            title="‹ All prescriptions"
-            secondary
-            onPress={() => onSelect(null)}
-          />
           <Card>
             <Txt style={styles.heading}>{rx.doctorName}</Txt>
             <Txt style={styles.sub}>

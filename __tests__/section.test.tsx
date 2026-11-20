@@ -28,3 +28,10 @@ test("quick action uses config copy and navigates to the correct flow", async ()
   await fireEvent.press(screen.getByText("Prescriptions"));
   expect(router.push).toHaveBeenCalledWith("/prescriptions");
 });
+
+test("home Book visit opens the booking sheet to choose a doctor", async () => {
+  const section = CONFIG_NORMAL.sections.find((s) => s.type === "hero_banner")!;
+  await render(<SectionRenderer scroll={scroll} section={section} />);
+  await fireEvent.press(screen.getByText("Book visit"));
+  expect(router.push).toHaveBeenLastCalledWith("/booking");
+});

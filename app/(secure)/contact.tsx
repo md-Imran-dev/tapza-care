@@ -4,7 +4,6 @@ import { Button, Card, styles, Txt } from "../../components/ui";
 export default function Contact() {
   return (
     <Page>
-      <Button title="‹ Back" secondary onPress={() => router.back()} />
       <Txt style={styles.title}>Your neighbourhood clinic</Txt>
       <Card>
         <Txt style={styles.heading}>Tapza Clinic · Madhapur</Txt>
