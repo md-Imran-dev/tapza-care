@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { SectionRenderer } from "@/components/home/SectionRenderer";
+import { TransitionScreen } from "@/components/motion/TransitionScreen";
 import { Skeleton } from "@/components/States";
 import { Button, Txt } from "@/components/ui";
 import type { Section } from "@/data/types";
@@ -37,45 +38,47 @@ export default function Home() {
     scroll.value = e.contentOffset.y;
   });
   return (
-    <View style={{ flex: 1, backgroundColor: config.theme.background }}>
-      <Header scroll={scroll} />
-      <Animated.FlatList
-        data={config.sections}
-        keyExtractor={(s) => s.id}
-        onScroll={handler}
-        scrollEventThrottle={16}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: space.xl }}
-        extraData={visibleIds}
-        onViewableItemsChanged={onViewable}
-        viewabilityConfig={viewability}
-        refreshing={configStatus === "loading"}
-        onRefresh={() => void useCare.getState().loadConfig()}
-        initialNumToRender={3}
-        windowSize={5}
-        maxToRenderPerBatch={3}
-        ListHeaderComponent={
-          configStatus === "loading" ? (
-            <Skeleton kind="home" />
-          ) : message ? (
-            <View style={{ padding: space.xl }}>
-              <Txt accessibilityRole="alert">{message}</Txt>
-              <Button
-                title="Retry home"
-                secondary
-                onPress={() => void useCare.getState().loadConfig()}
-              />
-            </View>
-          ) : undefined
-        }
-        renderItem={({ item: s }) => (
-          <SectionRenderer
-            section={s}
-            visible={visibleIds.has(s.id)}
-            scroll={scroll}
-          />
-        )}
-      />
-    </View>
+    <TransitionScreen>
+      <View style={{ flex: 1, backgroundColor: config.theme.background }}>
+        <Header scroll={scroll} />
+        <Animated.FlatList
+          data={config.sections}
+          keyExtractor={(s) => s.id}
+          onScroll={handler}
+          scrollEventThrottle={16}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: space.xl }}
+          extraData={visibleIds}
+          onViewableItemsChanged={onViewable}
+          viewabilityConfig={viewability}
+          refreshing={configStatus === "loading"}
+          onRefresh={() => void useCare.getState().loadConfig()}
+          initialNumToRender={3}
+          windowSize={5}
+          maxToRenderPerBatch={3}
+          ListHeaderComponent={
+            configStatus === "loading" ? (
+              <Skeleton kind="home" />
+            ) : message ? (
+              <View style={{ padding: space.xl }}>
+                <Txt accessibilityRole="alert">{message}</Txt>
+                <Button
+                  title="Retry home"
+                  secondary
+                  onPress={() => void useCare.getState().loadConfig()}
+                />
+              </View>
+            ) : undefined
+          }
+          renderItem={({ item: s }) => (
+            <SectionRenderer
+              section={s}
+              visible={visibleIds.has(s.id)}
+              scroll={scroll}
+            />
+          )}
+        />
+      </View>
+    </TransitionScreen>
   );
 }

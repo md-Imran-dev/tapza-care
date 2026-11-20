@@ -9,13 +9,18 @@ jest.mock("expo-haptics", () => ({
   selectionAsync: jest.fn(() => Promise.resolve()),
 }));
 jest.mock("expo-router", () => ({
+  useIsFocused: () => true,
   router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
 }));
 jest.mock("react-native-reanimated", () => {
-  const { Animated } = require("react-native");
+  const { Animated, Easing } = require("react-native");
   return {
     __esModule: true,
     default: Animated,
+    Easing,
+    SharedTransition: { duration: () => ({ easing: () => ({}) }) },
+    SharedTransitionBoundary: ({ children }) => children,
+    useReducedMotion: () => false,
     useSharedValue: (value) => ({ value }),
     useAnimatedStyle: (factory) => factory(),
     useAnimatedScrollHandler: () => () => {},

@@ -1,4 +1,5 @@
 import { DoctorDetails } from "@/components/doctors/DoctorDetails";
+import { TransitionScreen } from "@/components/motion/TransitionScreen";
 import { Txt } from "@/components/ui";
 import { useCare } from "@/state/app";
 import { useTheme } from "@/theme";
@@ -11,12 +12,27 @@ export default function Doctor() {
   const doctor = useCare((s) => s.doctors.find((d) => d.id === id));
   const t = useTheme();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: t.colors.background }}>
-      <ScrollView contentContainerStyle={{ padding: t.space.md, gap: t.space.md }}>
-        {doctor ? (
-          <DoctorDetails key={doctor.id} doctor={doctor} onBook={(date, slotId) => router.push({ pathname: "/booking", params: { doctorId: doctor.id, date, slotId } })} />
-        ) : <Txt>Doctor not found.</Txt>}
-      </ScrollView>
-    </SafeAreaView>
+    <TransitionScreen>
+      <SafeAreaView style={{ flex: 1, backgroundColor: t.colors.background }}>
+        <ScrollView
+          contentContainerStyle={{ padding: t.space.md, gap: t.space.md }}
+        >
+          {doctor ? (
+            <DoctorDetails
+              key={doctor.id}
+              doctor={doctor}
+              onBook={(date, slotId) =>
+                router.push({
+                  pathname: "/booking",
+                  params: { doctorId: doctor.id, date, slotId },
+                })
+              }
+            />
+          ) : (
+            <Txt>Doctor not found.</Txt>
+          )}
+        </ScrollView>
+      </SafeAreaView>
+    </TransitionScreen>
   );
 }

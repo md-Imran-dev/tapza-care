@@ -13,6 +13,8 @@ export function Header({ scroll }: { scroll?: SharedValue<number> }) {
   const palette = useTheme().colors;
   const t = useCare((s) => s.config.theme);
   const lang = useCare((s) => s.lang);
+  const languageChanging = useCare((s) => s.languageChanging);
+  const languageError = useCare((s) => s.languageError);
   const setLang = useCare((s) => s.setLang);
   const insets = useSafeAreaInsets();
   const a = useAnimatedStyle(() => ({
@@ -69,9 +71,16 @@ export function Header({ scroll }: { scroll?: SharedValue<number> }) {
           {(["en", "hi", "te"] as const).map((l) => (
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel={`Language ${l}`}
+              accessibilityLabel={
+                l === "en" ? "English" : l === "hi" ? "हिन्दी" : "తెలుగు"
+              }
               key={l}
-              onPress={() => setLang(l)}
+              disabled={languageChanging}
+              accessibilityState={{
+                selected: l === lang,
+                disabled: languageChanging,
+              }}
+              onPress={() => void setLang(l)}
               style={{
                 minWidth: 44,
                 minHeight: 44,
@@ -96,6 +105,11 @@ export function Header({ scroll }: { scroll?: SharedValue<number> }) {
           ))}
         </View>
       </View>
+      {!!languageError && (
+        <Txt accessibilityRole="alert" style={{ color: palette.white }}>
+          {languageError}
+        </Txt>
+      )}
       {!!scroll && (
         <Animated.View style={[{ overflow: "hidden" }, a]}>
           <Pressable

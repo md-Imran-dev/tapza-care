@@ -1,9 +1,9 @@
-import { router } from "expo-router";
 import { Page } from "@/components/Page";
 import { PrescriptionContent } from "@/components/prescriptions/PrescriptionContent";
 import { Button, Txt, styles } from "@/components/ui";
 import { enableReminders } from "@/lib/reminders";
 import { useCare } from "@/state/app";
+import { router } from "expo-router";
 import { useState } from "react";
 export default function Reminders() {
   const [notice, setNotice] = useState("");
@@ -38,7 +38,9 @@ export default function Reminders() {
       }
       <PrescriptionContent
         open={null}
-        onSelect={(id) => router.push({ pathname: "/prescription/[id]", params: { id } })}
+        onSelect={(id) =>
+          router.push({ pathname: "/prescription/[id]", params: { id } })
+        }
       />
     </Page>
   );

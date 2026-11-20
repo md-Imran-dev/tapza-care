@@ -18,7 +18,8 @@ Use any valid-format Indian mobile number (10 digits, starting 6–9), then **de
 
 - Config-driven home with hero, category chips, quick actions, services, doctors and offers. Each section owns its background. Viewability triggers one-time reveals, the search header collapses, and the hero has scroll parallax. Unknown types render nothing.
 - Profile switches normal/Diwali configuration at runtime. Colours, banner, section order and items change through `GET /config`. Tabs and their order/labels are read from config.
-- Doctor search/details and service booking → draggable date/slot sheet → optimistic pending booking → confirmed token and animated success. A 409 removes only the rejected pending booking and lets the user retry.
+- Doctor search/details → draggable date/slot sheet → optimistic pending booking → confirmed token and animated success. A 409 removes only the rejected pending booking and lets the user retry.
+- Clinic-service cards open a separate service booking route. Home collection requires a complete address/PIN; clinic tests/packages show the clinic location. Service slots, quoted price (including ₹0), location and service name persist in history/offline replay. Changed services and slot conflicts fail safely; no real dispatch or payment.
 - Independent loading, empty and error states for appointments and lists. A failed config refresh leaves the last-good layout visible; other tabs remain usable. Pull to refresh retries home/lists.
 - Prescriptions list → morning/afternoon/night schedule → mark today's dose taken. Dose keys include prescription, medicine, time period and local calendar date.
 - Persistent per-phone booking/dose state and language preference. Offline bookings persist with stable request IDs, replay through the same mock API after reconnect, and reconcile conflicts. Interrupted pending bookings become queued on reopening.
@@ -87,6 +88,26 @@ See `docs/DEMO_SCRIPT.md` for the 2–3 minute demo sequence and `AI_LOG.md` for
 
 The email conflicts between 24 and 48 hours; the attached PDF specifies 48 hours. Confirm the intended deadline with HR before relying on the longer window.
 
-Optional shared-element transitions, dark mode and a full E2E suite are omitted. Family members are illustrative sample data; real family CRUD and service checkout are outside the core assessment slice. Images are the supplied prototype's remote Pexels URLs and need a connection for their first load. Translation coverage is intentionally partial. Mock reservations reset with the process; patient booking history persists on-device.
+Shared doctor-photo transitions are enabled experimentally (see below). Dark mode and a full E2E suite are omitted. Family members are illustrative sample data; real family CRUD, service dispatch and payment collection are outside the core assessment slice. Images are the supplied prototype's remote Pexels URLs and need a connection for their first load. The built-in patient interface uses an English/Hindi/Telugu catalog. Language changes show progress and save per patient; names, medicine data and unknown custom config copy stay as authored. Mock reservations reset with the process; patient booking history persists on-device.
 
 Native screenshots are in `docs/screenshots/`; the real Android recording is `docs/tapza-care-android-demo.mp4` (2× speed, no narration, with a final reminder-confirmation still). The installable APK is built and verified on-device. A GitHub remote/push and final submission remain; no submission email has been sent. See `docs/SUBMISSION_STATUS.md`.
+
+### Doctor photo transitions
+
+Doctor cards, details and the booking sheet share doctor-photo transitions through
+`DoctorPhoto` and leaf-screen `TransitionScreen` boundaries. Reduce Motion disables
+the shared transition; web keeps the normal static images. The doctor-selection
+carousel inside booking uses ordinary images so each screen has one shared photo
+per doctor.
+
+Reanimated 4.7.1 requires the experimental
+`reanimated.staticFeatureFlags.ENABLE_SHARED_ELEMENT_TRANSITIONS` flag in
+`package.json`. This is a native build setting: Metro reloads and OTA updates do
+not enable it in an older binary. Build a fresh Android preview with:
+
+```bash
+npx eas-cli@latest build --platform android --profile preview
+```
+
+Verify card → details → booking and back navigation on the rebuilt app before
+shipping; JavaScript tests and exports do not validate native transition behavior.

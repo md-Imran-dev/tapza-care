@@ -1,5 +1,6 @@
 import { AuthShell } from "@/components/auth/AuthShell";
 import { Button, Txt, styles } from "@/components/ui";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useAuth } from "@/state/auth";
 import { useTheme } from "@/theme";
 import { useState } from "react";
@@ -10,6 +11,7 @@ export default function Signup() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const t = useTheme();
+  const { translate } = useTranslation();
   return (
     <AuthShell>
       <Txt style={styles.title}>What should we call you?</Txt>
@@ -17,11 +19,11 @@ export default function Signup() {
         One last step before we take care of the rest.
       </Txt>
       <TextInput
-        accessibilityLabel="Full name"
+        accessibilityLabel={translate("Full name")}
         autoComplete="name"
         value={name}
         onChangeText={setName}
-        placeholder="Your full name"
+        placeholder={translate("Your full name")}
         placeholderTextColor={t.colors.textSecondary}
         style={{
           backgroundColor: t.colors.surface,

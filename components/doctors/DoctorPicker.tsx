@@ -1,10 +1,18 @@
+import type { Doctor } from "@/data/types";
+import { useTranslation } from "@/hooks/useTranslation";
+import { useTheme } from "@/theme";
 import { memo } from "react";
 import { FlatList, Image, Pressable, View } from "react-native";
-import type { Doctor } from "@/data/types";
-import { useTheme } from "@/theme";
 import { Txt, styles } from "../ui";
 
-export const DoctorPicker = memo(function DoctorPicker({ doctors, selectedId, disabled = false, title = "Choose your doctor", emptyMessage = "No doctors available right now.", onSelect }: {
+export const DoctorPicker = memo(function DoctorPicker({
+  doctors,
+  selectedId,
+  disabled = false,
+  title = "Choose your doctor",
+  emptyMessage = "No doctors available right now.",
+  onSelect,
+}: {
   doctors: Doctor[];
   selectedId: string | null;
   disabled?: boolean;
@@ -13,9 +21,12 @@ export const DoctorPicker = memo(function DoctorPicker({ doctors, selectedId, di
   onSelect: (id: string) => void;
 }) {
   const t = useTheme();
+  const { translate } = useTranslation();
   return (
     <View style={{ gap: t.space.sm, paddingBottom: t.space.md }}>
-      <Txt style={[styles.heading, { paddingHorizontal: t.space.xl }]}>{title}</Txt>
+      <Txt style={[styles.heading, { paddingHorizontal: t.space.xl }]}>
+        {title}
+      </Txt>
       <FlatList
         horizontal
         data={doctors}
@@ -23,19 +34,39 @@ export const DoctorPicker = memo(function DoctorPicker({ doctors, selectedId, di
         keyExtractor={(doctor) => doctor.id}
         showsHorizontalScrollIndicator={false}
         initialNumToRender={4}
-        contentContainerStyle={{ paddingHorizontal: t.space.xl, gap: t.space.sm }}
+        contentContainerStyle={{
+          paddingHorizontal: t.space.xl,
+          gap: t.space.sm,
+        }}
         renderItem={({ item }) => (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={`Select ${item.name}`}
+            accessibilityLabel={translate(`Select ${item.name}`)}
             accessibilityState={{ selected: selectedId === item.id, disabled }}
             disabled={disabled}
             onPress={() => onSelect(item.id)}
-            style={{ width: 172, padding: t.space.md, borderRadius: t.radius.lg, borderWidth: 1, borderColor: selectedId === item.id ? t.colors.primary : t.colors.line, backgroundColor: selectedId === item.id ? t.colors.paleGreen : t.colors.background, gap: t.space.xs }}
+            style={{
+              width: 172,
+              padding: t.space.md,
+              borderRadius: t.radius.lg,
+              borderWidth: 1,
+              borderColor:
+                selectedId === item.id ? t.colors.primary : t.colors.line,
+              backgroundColor:
+                selectedId === item.id
+                  ? t.colors.paleGreen
+                  : t.colors.background,
+              gap: t.space.xs,
+            }}
           >
-            <Image source={{ uri: item.photoUrl }} style={{ width: 44, height: 44, borderRadius: 14 }} />
-            <Txt style={{ fontWeight: "800" }}>{item.name}</Txt>
-            <Txt style={styles.sub}>{item.specialty} · ★ {item.rating}</Txt>
+            <Image
+              source={{ uri: item.photoUrl }}
+              style={{ width: 44, height: 44, borderRadius: 14 }}
+            />
+            <Txt localize={false} style={{ fontWeight: "800" }}>{item.name}</Txt>
+            <Txt style={styles.sub}>
+              {item.specialty} · ★ {item.rating}
+            </Txt>
           </Pressable>
         )}
       />

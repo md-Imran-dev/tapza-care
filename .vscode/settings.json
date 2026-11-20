@@ -4,5 +4,14 @@
     "source.organizeImports": "explicit",
     "source.sortMembers": "explicit"
   },
-  "cSpell.words": ["tapza", "viewability", "worklets"]
+  "cSpell.words": [
+    "magnifyingglass",
+    "mappin",
+    "Pressable",
+    "tapza",
+    "testtube",
+    "viewability",
+    "worklets",
+    "xmark"
+  ]
 }

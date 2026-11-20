@@ -51,5 +51,10 @@
     "typecheck": "tsc --noEmit",
     "test": "jest --runInBand"
   },
-  "private": true
+  "private": true,
+  "reanimated": {
+    "staticFeatureFlags": {
+      "ENABLE_SHARED_ELEMENT_TRANSITIONS": true
+    }
+  }
 }

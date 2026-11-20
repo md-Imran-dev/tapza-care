@@ -16,11 +16,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { memo, useEffect } from "react";
 import {
-  useWindowDimensions,
   Image,
   ImageBackground,
   Pressable,
   ScrollView,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from "react-native";
@@ -173,7 +173,7 @@ export const SectionRenderer = memo(function SectionRenderer({
           >
             {h.sub}
           </Txt>
-          <View style={styles.row}>
+          <View style={[styles.row, { flexWrap: "wrap" }]}>
             <Pressable
               onPress={() => router.push("/booking")}
               style={{
@@ -181,9 +181,13 @@ export const SectionRenderer = memo(function SectionRenderer({
                 borderRadius: 30,
                 padding: space.lg,
                 minHeight: 48,
+                flexBasis: "45%",
+                flexGrow: 1,
+                flexShrink: 1,
+                maxWidth: "100%",
               }}
             >
-              <Txt style={{ fontWeight: "800" }}>{h.cta}</Txt>
+              <Txt style={{ fontWeight: "800", textAlign: "center" }}>{h.cta}</Txt>
             </Pressable>
             <Pressable
               onPress={() => router.push("/contact")}
@@ -193,9 +197,13 @@ export const SectionRenderer = memo(function SectionRenderer({
                 borderRadius: 30,
                 padding: space.lg,
                 minHeight: 48,
+                flexBasis: "45%",
+                flexGrow: 1,
+                flexShrink: 1,
+                maxWidth: "100%",
               }}
             >
-              <Txt style={{ color: palette.white, fontWeight: "700" }}>
+              <Txt style={{ color: palette.white, fontWeight: "700", textAlign: "center" }}>
                 WhatsApp us
               </Txt>
             </Pressable>
@@ -371,7 +379,7 @@ export const SectionRenderer = memo(function SectionRenderer({
                   }
                 />
               </View>
-              <Txt style={{ fontSize: type.micro, fontWeight: "800" }}>
+              <Txt style={{ fontSize: type.micro, fontWeight: "800", textAlign: "center", maxWidth: "100%" }}>
                 {q.label}
               </Txt>
               <Txt
@@ -457,12 +465,8 @@ export const SectionRenderer = memo(function SectionRenderer({
                   title="ADD +"
                   onPress={() =>
                     router.push({
-                      pathname: "/booking",
-                      params: {
-                        doctorId: "d1",
-                        service: item.name,
-                        price: String(item.priceInr),
-                      },
+                      pathname: "/service/[id]",
+                      params: { id: item.id },
                     })
                   }
                 />

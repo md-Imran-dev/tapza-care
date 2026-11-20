@@ -41,7 +41,23 @@ export default function Bookings() {
               {b.status.toUpperCase()}
             </Txt>
           </View>
-          <Txt style={styles.heading}>{b.doctorName}</Txt>
+          <Txt style={styles.heading}>
+            {b.service?.serviceName ?? b.doctorName}
+          </Txt>
+          {b.service && (
+            <>
+              <Txt>
+                {b.service.fulfillment === "home"
+                  ? "Home collection"
+                  : "Clinic service"}{" "}
+                ·{" "}
+                {b.service.priceInr === 0
+                  ? "FREE · ₹0"
+                  : `₹${b.service.priceInr}`}
+              </Txt>
+              <Txt>{b.service.address}</Txt>
+            </>
+          )}
           <Txt style={styles.sub}>
             📅 {b.date} · {b.time}
           </Txt>
@@ -66,15 +82,24 @@ export default function Bookings() {
           {b.status === "failed" && (
             <>
               <Txt style={{ color: t.colors.red }}>
-                This slot was taken while your booking was offline.
+                {b.service
+                  ? "The service or time is no longer available. Reopen the service to try again."
+                  : "This slot was taken while your booking was offline."}
               </Txt>
               <Button
                 title="Pick another slot"
                 onPress={() =>
-                  router.push({
-                    pathname: "/booking",
-                    params: { doctorId: b.doctorId },
-                  })
+                  router.push(
+                    b.service
+                      ? {
+                          pathname: "/service/[id]",
+                          params: { id: b.service.serviceId },
+                        }
+                      : {
+                          pathname: "/booking",
+                          params: { doctorId: b.doctorId },
+                        },
+                  )
                 }
               />
             </>

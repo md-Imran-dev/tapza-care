@@ -13,6 +13,12 @@ import type {
   Prescription,
   Slot,
 } from "../data/types";
+import {
+  CLINIC_LOCATION,
+  findService,
+  serviceReservationSchema,
+  type ServiceReservation,
+} from "./services";
 import { storage } from "./storage";
 export type Network = {
   latencyMs: number;
@@ -101,12 +107,16 @@ const adapter: AxiosAdapter = async (config) => {
     response.data = network.emptyDoctors ? [] : DOCTORS;
   else if (url.pathname === "/prescriptions")
     response.data = network.emptyPrescriptions ? [] : PRESCRIPTIONS;
-  else if (url.pathname === "/slots") {
+  else if (url.pathname === "/slots" || url.pathname === "/service-slots") {
     if (network.failSlots) fail(503, "Slots could not load");
     const id = config.params?.doctorId ?? url.searchParams.get("doctorId");
     const date = config.params?.date ?? url.searchParams.get("date");
+    const serviceSlots = url.pathname === "/service-slots";
+    const catalog = override ?? (festival ? CONFIG_DIWALI : CONFIG_NORMAL);
     if (
-      !DOCTORS.some((d) => d.id === id) ||
+      (serviceSlots
+        ? !findService(catalog, String(id).replace(/^service:/, ""))
+        : !DOCTORS.some((d) => d.id === id)) ||
       !/^\d{4}-\d{2}-\d{2}$/.test(date ?? "")
     )
       fail(400, "Invalid doctor or date");
@@ -122,10 +132,40 @@ const adapter: AxiosAdapter = async (config) => {
     const { doctorId, slotId } = input;
     const [slotDoctor, date] = String(slotId).split("|");
     const doctor = DOCTORS.find((d) => d.id === doctorId);
+    let service: ServiceReservation | undefined;
+    if (input.service !== undefined) {
+      const parsed = serviceReservationSchema.safeParse(input.service);
+      if (!parsed.success) fail(400, "Invalid service details or address");
+      service = parsed.data!;
+      const confirmed = reservations.get(slotId);
+      if (
+        confirmed &&
+        input.requestId &&
+        confirmed.id === input.requestId &&
+        confirmed.doctorId === doctorId &&
+        JSON.stringify(confirmed.service) === JSON.stringify(service)
+      ) {
+        response.status = 201;
+        response.data = confirmed;
+        return response;
+      }
+      const catalog = override ?? (festival ? CONFIG_DIWALI : CONFIG_NORMAL);
+      const item = findService(catalog, service.serviceId);
+      if (
+        !item ||
+        doctorId !== `service:${item.id}` ||
+        item.name !== service.serviceName ||
+        item.priceInr !== service.priceInr ||
+        (item.fulfillment ?? "clinic") !== service.fulfillment ||
+        (service.fulfillment === "clinic" &&
+          service.address !== CLINIC_LOCATION)
+      )
+        fail(400, "Service changed. Reopen the service and try again.");
+    }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date ?? ""))
       fail(400, "Invalid appointment date");
     const slot = slotsFor(doctorId, date ?? "").find((s) => s.id === slotId);
-    if (!doctor || slotDoctor !== doctorId || !slot)
+    if ((!doctor && !service) || slotDoctor !== doctorId || !slot)
       fail(400, "Invalid appointment");
     const previous = reservations.get(slotId);
     if (previous) {
@@ -142,7 +182,8 @@ const adapter: AxiosAdapter = async (config) => {
       id: input.requestId ?? `visit-${Date.now()}`,
       doctorId,
       slotId,
-      doctorName: doctor!.name,
+      doctorName: service ? "Clinic services team" : doctor!.name,
+      ...(service ? { service } : {}),
       date,
       time: slot!.label,
       status: "confirmed",
@@ -196,7 +237,22 @@ export const postBooking = (
   doctorId: string,
   slotId: string,
   requestId: string,
+  service?: ServiceReservation,
 ) =>
   api
-    .post<Booking>("/bookings", { doctorId, slotId, requestId })
+    .post<Booking>("/bookings", {
+      doctorId,
+      slotId,
+      requestId,
+      ...(service ? { service } : {}),
+    })
     .then((r) => r.data);
+
+export const getServiceSlots = (serviceId: string, date: string) =>
+  cachedRequest(`service-slots:${serviceId}:${date}`, () =>
+    api
+      .get<
+        Slot[]
+      >("/service-slots", { params: { doctorId: `service:${serviceId}`, date } })
+      .then((r) => r.data),
+  );

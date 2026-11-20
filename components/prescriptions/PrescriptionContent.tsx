@@ -34,7 +34,7 @@ export function PrescriptionContent({
       {rx ? (
         <>
           <Card>
-            <Txt style={styles.heading}>{rx.doctorName}</Txt>
+            <Txt localize={false} style={styles.heading}>{rx.doctorName}</Txt>
             <Txt style={styles.sub}>
               {rx.clinicName} · {rx.issuedAt}
             </Txt>
@@ -82,6 +82,7 @@ export function PrescriptionContent({
                         }}
                       >
                         <Txt
+                          localize={false}
                           style={{
                             fontWeight: "800",
                             textDecorationLine: done ? "line-through" : "none",

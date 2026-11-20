@@ -83,7 +83,7 @@ export const CONFIG_NORMAL: LayoutConfig = {
   tabs: [
     { id: "t1", label: "Home", icon: "home", screen: "home" },
     { id: "t2", label: "Bookings", icon: "calendar", screen: "bookings" },
-    { id: "t3", label: "Rx", icon: "rx", screen: "prescriptions" },
+    { id: "t3", label: "Prescriptions", icon: "rx", screen: "prescriptions" },
     { id: "t4", label: "Profile", icon: "user", screen: "profile" },
   ],
   sections: [
@@ -194,6 +194,7 @@ export const CONFIG_NORMAL: LayoutConfig = {
         {
           id: "s4",
           name: "Home Sample Collection",
+          fulfillment: "home",
           priceInr: 0,
           image: IMG.clinicHero,
           badge: "FREE",
@@ -245,7 +246,7 @@ export const CONFIG_DIWALI: LayoutConfig = {
   tabs: [
     { id: "t1", label: "Home", icon: "home", screen: "home" },
     { id: "t2", label: "Bookings", icon: "calendar", screen: "bookings" },
-    { id: "t3", label: "Rx", icon: "rx", screen: "prescriptions" },
+    { id: "t3", label: "Prescriptions", icon: "rx", screen: "prescriptions" },
     { id: "t4", label: "Profile", icon: "user", screen: "profile" },
   ],
   sections: [
@@ -339,6 +340,7 @@ export const CONFIG_DIWALI: LayoutConfig = {
         {
           id: "s4",
           name: "Free Home Collection + Diya",
+          fulfillment: "home",
           priceInr: 0,
           image: IMG.clinicHero,
           badge: "FREE 🪔",
@@ -490,7 +492,7 @@ export const PRESCRIPTIONS: Prescription[] = [
 export const STR: Record<string, Record<"en" | "hi" | "te", string>> = {
   home: { en: "Home", hi: "होम", te: "హోమ్" },
   bookings: { en: "Bookings", hi: "बुकिंग", te: "బుకింగ్‌లు" },
-  rx: { en: "Rx", hi: "पर्चा", te: "మందుల చీటీ" },
+  rx: { en: "Prescriptions", hi: "पर्चा", te: "మందుల చీటీ" },
   profile: { en: "Profile", hi: "प्रोफ़ाइल", te: "ప్రొఫైల్" },
   bookVisit: { en: "Book visit", hi: "अपॉइंटमेंट लें", te: "అపాయింట్‌మెంట్" },
   confirm: {

@@ -9,14 +9,25 @@ import {
   type TextProps,
   type ViewProps,
 } from "react-native";
+import { useTranslation } from "../hooks/useTranslation";
 import { space, type, useTheme } from "../theme";
-export function Txt({ style, ...props }: TextProps) {
+export function Txt({ style, children, localize = true, ...props }: TextProps & { localize?: boolean }) {
+  const { translate } = useTranslation();
   const { colors: theme } = useTheme();
   return (
     <Text
       {...props}
+      accessibilityLabel={
+        props.accessibilityLabel
+          ? translate(props.accessibilityLabel)
+          : undefined
+      }
       style={[{ fontSize: type.body, color: theme.textPrimary }, style]}
-    />
+    >
+      {React.Children.map(children, (child) =>
+        localize && typeof child === "string" ? translate(child) : child,
+      )}
+    </Text>
   );
 }
 export function Card({ style, ...props }: ViewProps) {

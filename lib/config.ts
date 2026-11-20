@@ -74,6 +74,7 @@ const itemSchemas: Record<string, z.ZodType> = {
     desc: z.string(),
   }),
   service_grid: z.object({
+    fulfillment: z.enum(["home", "clinic"]).default("clinic"),
     id: z.string(),
     name: z.string(),
     priceInr: z.number().nonnegative(),

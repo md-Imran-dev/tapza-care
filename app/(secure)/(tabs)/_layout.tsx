@@ -1,3 +1,4 @@
+import { translateText } from "@/lib/i18n";
 import { Tabs } from "expo-router";
 import { useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -14,12 +15,6 @@ export default function Layout() {
   const { fontScale } = useWindowDimensions();
   const lang = useCare((s) => s.lang);
   const tabs = useCare((s) => s.config.tabs);
-  const labels =
-    lang === "hi"
-      ? ["होम", "बुकिंग", "पर्चा", "प्रोफ़ाइल"]
-      : lang === "te"
-        ? ["హోమ్", "బుకింగ్‌లు", "మందుల చీటీ", "ప్రొఫైల్"]
-        : null;
   return (
     <Tabs
       safeAreaInsets={{ bottom: 0 }}
@@ -68,17 +63,19 @@ export default function Layout() {
             name={routeNames[screen]}
             options={{
               href: tab ? undefined : null,
-              title:
-                labels?.[
-                  ["home", "bookings", "prescriptions", "profile"].indexOf(
-                    screen,
-                  )
-                ] ??
-                tab?.label ??
-                screen,
+              title: translateText(
+                tab?.label === "Rx" ? "Prescriptions" : (tab?.label ?? screen),
+                lang,
+              ),
               tabBarIcon: ({ color }) => (
                 <Icon
-                  name={screen === "profile" ? "profile" : screen === "bookings" ? "calendarOutline" : tab?.icon ?? "home"}
+                  name={
+                    screen === "profile"
+                      ? "profile"
+                      : screen === "bookings"
+                        ? "calendarOutline"
+                        : (tab?.icon ?? "home")
+                  }
                   color={String(color)}
                   size={21}
                 />

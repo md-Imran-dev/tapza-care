@@ -1,7 +1,7 @@
-import { router } from "expo-router";
 import { Page } from "@/components/Page";
 import { PrescriptionContent } from "@/components/prescriptions/PrescriptionContent";
 import { Txt, styles } from "@/components/ui";
+import { router } from "expo-router";
 export default function Prescriptions() {
   return (
     <Page>
@@ -9,7 +9,9 @@ export default function Prescriptions() {
       <Txt style={styles.sub}>Care continues after your clinic visit</Txt>
       <PrescriptionContent
         open={null}
-        onSelect={(id) => router.push({ pathname: "/prescription/[id]", params: { id } })}
+        onSelect={(id) =>
+          router.push({ pathname: "/prescription/[id]", params: { id } })
+        }
       />
     </Page>
   );

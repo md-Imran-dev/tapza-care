@@ -30,11 +30,12 @@ export default function SecureLayout() {
   return (
     <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="doctor/[id]" options={{ animation: "fade" }} />
       <Stack.Screen
         name="booking"
         options={{
           presentation: "transparentModal",
-          animation: "slide_from_bottom",
+          animation: "fade",
           contentStyle: { backgroundColor: t.colors.transparent },
         }}
       />

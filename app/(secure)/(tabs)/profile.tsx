@@ -1,6 +1,7 @@
-import { Page } from "@/components/Page";
 import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { Page } from "@/components/Page";
 import { Button, Card, styles, Txt } from "@/components/ui";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useCare } from "@/state/app";
 import { useAuth } from "@/state/auth";
 import { useTheme } from "@/theme";
@@ -12,6 +13,7 @@ export default function Profile() {
   const festival = useCare((s) => s.festival);
   const session = useAuth((s) => s.session);
   const t = useTheme();
+  const { translate } = useTranslation();
   const [confirmLogout, setConfirmLogout] = useState(false);
   const [signingOut, setSigningOut] = useState(false);
   async function signOut() {
@@ -22,7 +24,7 @@ export default function Profile() {
       setConfirmLogout(false);
     } catch {
       setConfirmLogout(false);
-      Alert.alert("Could not sign out", "Please retry.");
+      Alert.alert(translate("Could not sign out"), translate("Please retry."));
     } finally {
       setSigningOut(false);
     }
@@ -50,7 +52,7 @@ export default function Profile() {
             </Txt>
           </View>
           <View style={{ flex: 1 }}>
-            <Txt style={styles.heading}>{session?.name}</Txt>
+            <Txt localize={false} style={styles.heading}>{session?.name}</Txt>
             <Txt style={styles.sub}>+91 {session?.phone} · Hyderabad</Txt>
           </View>
         </View>

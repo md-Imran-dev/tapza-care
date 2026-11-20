@@ -1,5 +1,6 @@
 import { AuthShell } from "@/components/auth/AuthShell";
 import { Button, Txt, styles } from "@/components/ui";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useAuth } from "@/state/auth";
 import { useTheme } from "@/theme";
 import { router } from "expo-router";
@@ -10,6 +11,7 @@ export default function Otp() {
   const [code, setCode] = useState("");
   const [now, setNow] = useState(() => Date.now());
   const t = useTheme();
+  const { translate } = useTranslation();
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(timer);
@@ -25,7 +27,7 @@ export default function Otp() {
       <Txt style={styles.title}>Verify your number</Txt>
       <Txt style={styles.sub}>Enter the six-digit code for +91 {phone}.</Txt>
       <TextInput
-        accessibilityLabel="Verification code"
+        accessibilityLabel={translate("Verification code")}
         keyboardType="number-pad"
         autoComplete="sms-otp"
         textContentType="oneTimeCode"

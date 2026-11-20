@@ -1,0 +1,121 @@
+import type { Slot } from "@/data/types";
+import { useTranslation } from "@/hooks/useTranslation";
+import { localDateKey } from "@/lib/dates";
+import { useTheme } from "@/theme";
+import { useMemo } from "react";
+import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
+import { Button, styles, Txt } from "../ui";
+
+type Props = {
+  date: string;
+  slotId: string;
+  slots: Slot[];
+  loading: boolean;
+  error: string | null;
+  disabled?: boolean;
+  onDate: (date: string) => void;
+  onSlot: (id: string) => void;
+  onRetry: () => void;
+};
+export function AppointmentPicker({
+  date,
+  slotId,
+  slots,
+  loading,
+  error,
+  disabled,
+  onDate,
+  onSlot,
+  onRetry,
+}: Props) {
+  const t = useTheme();
+  const { locale } = useTranslation();
+  const dates = useMemo(
+    () =>
+      Array.from({ length: 7 }, (_, i) => {
+        const day = new Date();
+        day.setDate(day.getDate() + i);
+        return {
+          id: localDateKey(day),
+          label: day.toLocaleDateString(locale, {
+            day: "numeric",
+            month: "short",
+            weekday: "short",
+          }),
+        };
+      }),
+    [locale],
+  );
+  return (
+    <View style={{ gap: t.space.md }}>
+      <Txt style={styles.heading}>Pick a date</Txt>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ gap: t.space.sm }}
+      >
+        {dates.map((day) => (
+          <Pressable
+            key={day.id}
+            accessibilityRole="button"
+            accessibilityState={{ selected: day.id === date, disabled }}
+            disabled={disabled}
+            onPress={() => onDate(day.id)}
+            style={{
+              minHeight: 56,
+              justifyContent: "center",
+              padding: t.space.md,
+              borderRadius: t.radius.md,
+              backgroundColor:
+                day.id === date ? t.colors.paleGreen : t.colors.background,
+              borderWidth: 1,
+              borderColor: day.id === date ? t.colors.primary : t.colors.line,
+            }}
+          >
+            <Txt>{day.label}</Txt>
+          </Pressable>
+        ))}
+      </ScrollView>
+      <Txt style={styles.heading}>Available times</Txt>
+      {loading ? (
+        <ActivityIndicator color={t.colors.primary} />
+      ) : error ? (
+        <Button title="Retry available times" onPress={onRetry} />
+      ) : slots.some((s) => s.available) ? (
+        <View
+          style={{ flexDirection: "row", flexWrap: "wrap", gap: t.space.sm }}
+        >
+          {slots.map((slot) => (
+            <Pressable
+              key={slot.id}
+              accessibilityRole="button"
+              accessibilityLabel={slot.label}
+              accessibilityState={{
+                selected: slot.id === slotId,
+                disabled: disabled || !slot.available,
+              }}
+              disabled={disabled || !slot.available}
+              onPress={() => onSlot(slot.id)}
+              style={{
+                minHeight: 48,
+                padding: t.space.md,
+                justifyContent: "center",
+                borderRadius: t.radius.md,
+                backgroundColor:
+                  slot.id === slotId ? t.colors.paleGreen : t.colors.background,
+                borderWidth: 1,
+                borderColor:
+                  slot.id === slotId ? t.colors.primary : t.colors.line,
+                opacity: slot.available ? 1 : 0.35,
+              }}
+            >
+              <Txt>{slot.label}</Txt>
+            </Pressable>
+          ))}
+        </View>
+      ) : (
+        <Txt>No times available. Please choose another date.</Txt>
+      )}
+    </View>
+  );
+}

@@ -1,5 +1,6 @@
 import { AuthShell } from "@/components/auth/AuthShell";
 import { Button, Txt, styles } from "@/components/ui";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useAuth } from "@/state/auth";
 import { useTheme } from "@/theme";
 import { router } from "expo-router";
@@ -9,6 +10,7 @@ export default function Login() {
   const { busy, error, sendOtp } = useAuth();
   const [phone, setPhone] = useState("");
   const t = useTheme();
+  const { translate } = useTranslation();
   return (
     <AuthShell>
       <Txt style={styles.title}>Welcome to better care</Txt>
@@ -30,13 +32,13 @@ export default function Login() {
       >
         <Txt>🇮🇳 +91</Txt>
         <TextInput
-          accessibilityLabel="Mobile number"
+          accessibilityLabel={translate("Mobile number")}
           keyboardType="phone-pad"
           autoComplete="tel"
           maxLength={10}
           value={phone}
           onChangeText={(v) => setPhone(v.replace(/\D/g, ""))}
-          placeholder="Enter 10-digit number"
+          placeholder={translate("Enter 10-digit number")}
           placeholderTextColor={t.colors.textSecondary}
           style={{
             flex: 1,

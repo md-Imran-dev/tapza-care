@@ -1,3 +1,4 @@
+import { LanguageLoader } from "@/components/LanguageLoader";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
@@ -33,6 +34,7 @@ export default function Layout() {
           <ActivityIndicator color={t.colors.white} />
         </View>
       )}
+      <LanguageLoader />
     </GestureHandlerRootView>
   );
 }

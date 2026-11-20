@@ -71,6 +71,7 @@ export type QuickActionItem = {
   desc: string;
 };
 export type ServiceItem = {
+  fulfillment?: "home" | "clinic";
   id: string;
   name: string;
   priceInr: number;
@@ -127,6 +128,7 @@ export type Prescription = {
   medicines: Medicine[];
 };
 export type Booking = {
+  service?: import("../lib/services").ServiceReservation;
   id: string;
   doctorId: string;
   slotId: string;

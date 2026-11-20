@@ -1,8 +1,10 @@
+import { useTranslation } from "@/hooks/useTranslation";
+import { TransitionScreen } from "@/components/motion/TransitionScreen";
+import { DoctorPhoto } from "@/components/doctors/DoctorPhoto";
 import { router, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
-  Image,
   Pressable,
   ScrollView,
   View,
@@ -27,16 +29,13 @@ import { useCare } from "../../state/app";
 import { space, type, useTheme } from "../../theme";
 export default function Booking() {
   const palette = useTheme().colors;
+  const { locale } = useTranslation();
   const {
     doctorId,
-    service,
-    price,
     date: initialDate,
     slotId: initialSlot,
   } = useLocalSearchParams<{
     doctorId: string;
-    service?: string;
-    price?: string;
     date?: string;
     slotId?: string;
   }>();
@@ -58,12 +57,12 @@ export default function Booking() {
         date.setDate(date.getDate() + i);
         return {
           iso: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`,
-          day: date.toLocaleDateString("en-IN", { weekday: "short" }),
+          day: date.toLocaleDateString(locale, { weekday: "short" }),
           date: date.getDate(),
-          month: date.toLocaleDateString("en-IN", { month: "short" }),
+          month: date.toLocaleDateString(locale, { month: "short" }),
         };
       }),
-    [],
+    [locale],
   );
   const [date, setDate] = useState(dates.some((d) => d.iso === initialDate) ? initialDate! : dates[0].iso);
   const [slot, setSlot] = useState(initialSlot ?? "");
@@ -91,6 +90,7 @@ export default function Booking() {
     });
   const a = useAnimatedStyle(() => ({ transform: [{ translateY: y.value }] }));
   return (
+    <TransitionScreen>
     <View
       style={{
         flex: 1,
@@ -175,12 +175,13 @@ export default function Booking() {
                 { paddingHorizontal: space.xl, paddingBottom: space.lg },
               ]}
             >
-              <Image
-                source={{ uri: d.photoUrl }}
+              <DoctorPhoto
+                doctor={d}
+                shared={doctorId === d.id}
                 style={{ height: 58, width: 58, borderRadius: 18 }}
               />
               <View style={{ flex: 1, gap: space.tiny }}>
-                <Txt style={styles.heading}>{d.name}</Txt>
+                <Txt localize={false} style={styles.heading}>{d.name}</Txt>
                 <Txt style={styles.sub}>
                   {d.specialty} · ★ {d.rating}
                 </Txt>
@@ -209,7 +210,6 @@ export default function Booking() {
                   you reconnect.
                 </Txt>
               )}
-              {!!service && <Txt style={styles.heading}>{service}</Txt>}
               <Txt
                 style={{
                   fontWeight: "800",
@@ -371,7 +371,7 @@ export default function Booking() {
               }}
             >
               <Txt style={{ fontWeight: "800" }}>
-                ₹{price ?? d.feeInr} · Pay at clinic
+                ₹{d.feeInr} · Pay at clinic
               </Txt>
               {status === "pending" ? (
                 <ActivityIndicator color={t.primary} />
@@ -411,5 +411,6 @@ export default function Booking() {
         )}
       </Animated.View>
     </View>
+    </TransitionScreen>
   );
 }

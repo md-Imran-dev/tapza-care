@@ -18,12 +18,19 @@ import {
   type Network,
 } from "../lib/api";
 import { parseConfig } from "../lib/config";
+import {
+  findService,
+  serviceReservationSchema,
+  type ServiceReservation,
+} from "../lib/services";
 import { storage } from "../lib/storage";
 type LoadStatus = "idle" | "loading" | "ready" | "error" | "cached";
 type State = {
   config: LayoutConfig;
   festival: boolean;
   lang: Lang;
+  languageChanging: boolean;
+  languageError: string | null;
   doses: Record<string, boolean>;
   bookings: Booking[];
   doctors: Doctor[];
@@ -42,12 +49,17 @@ type State = {
   loadConfig: () => Promise<void>;
   loadData: () => Promise<void>;
   toggleTheme: () => Promise<void>;
-  setLang: (lang: Lang) => void;
+  setLang: (lang: Lang) => Promise<void>;
   toggleDose: (key: string) => void;
   setNetwork: (key: "offline" | "fail" | "slow", value: boolean) => void;
   updateNetwork: (patch: Partial<Network>) => void;
   patch: (text: string) => boolean;
-  book: (doctorId: string, date: string, slotId: string) => Promise<boolean>;
+  book: (
+    doctorId: string,
+    date: string,
+    slotId: string,
+    service?: ServiceReservation,
+  ) => Promise<boolean>;
   syncQueue: () => Promise<void>;
   reset: () => void;
 };
@@ -58,6 +70,8 @@ const seed = {
   config: CONFIG_NORMAL,
   festival: false,
   lang: "en" as Lang,
+  languageChanging: false,
+  languageError: null,
   doses: {},
   bookings: [],
   doctors: [],
@@ -95,13 +109,14 @@ export const useCare = create<State>((set, get) => {
       const current = ++generation;
       set({ ...seed, scope: phone });
       try {
-        const [patient, cached] = await Promise.all([
+        const [patient, cached, savedLanguage] = await Promise.all([
           storage.read<{
             doses: Record<string, boolean>;
             bookings: Booking[];
             lang: Lang;
           }>(`patient:${phone}`),
           storage.read<LayoutConfig>("config"),
+          storage.read<Lang>(`language:${phone}`),
         ]);
         if (current !== generation) return;
         let config = CONFIG_NORMAL;
@@ -122,6 +137,11 @@ export const useCare = create<State>((set, get) => {
                 lang: patient.lang ?? "en",
               }
             : {}),
+          lang: ["en", "hi", "te"].includes(savedLanguage ?? "")
+            ? savedLanguage!
+            : ["en", "hi", "te"].includes(patient?.lang ?? "")
+              ? patient!.lang
+              : "en",
           hydrated: true,
         });
         mockServer.setFestival(config.theme.festival.name === "diwali");
@@ -176,9 +196,32 @@ export const useCare = create<State>((set, get) => {
       mockServer.setFestival(festival);
       await get().loadConfig();
     },
-    setLang: (lang) => {
-      set({ lang });
-      persist();
+    setLang: async (lang) => {
+      if (
+        !["en", "hi", "te"].includes(lang) ||
+        get().languageChanging ||
+        get().lang === lang
+      )
+        return;
+      const current = generation;
+      const scope = get().scope;
+      set({ languageChanging: true, languageError: null });
+      try {
+        // Keep feedback visible for a short local save; no network request is needed.
+        await Promise.all([
+          storage.write(`language:${scope ?? "local"}`, lang),
+          new Promise((resolve) => setTimeout(resolve, 250)),
+        ]);
+        if (current === generation) {
+          set({ lang });
+          persist();
+        }
+      } catch {
+        if (current === generation)
+          set({ languageError: "Could not change language. Please retry." });
+      } finally {
+        if (current === generation) set({ languageChanging: false });
+      }
     },
     toggleDose: (key) => {
       set((s) => ({ doses: { ...s.doses, [key]: !s.doses[key] } }));
@@ -215,7 +258,7 @@ export const useCare = create<State>((set, get) => {
         return false;
       }
     },
-    book: async (doctorId, date, slotId) => {
+    book: async (doctorId, date, slotId, service) => {
       const current = generation;
       const s = get();
       const existing = s.bookings.find(
@@ -227,7 +270,21 @@ export const useCare = create<State>((set, get) => {
       const doc =
         s.doctors.find((d) => d.id === doctorId) ??
         DOCTORS.find((d) => d.id === doctorId);
-      if (!doc) return false;
+      if (service) {
+        const parsed = serviceReservationSchema.safeParse(service);
+        const item = findService(s.config, service.serviceId);
+        if (
+          !parsed.success ||
+          !item ||
+          doctorId !== `service:${item.id}` ||
+          service.serviceName !== item.name ||
+          service.priceInr !== item.priceInr ||
+          service.fulfillment !== (item.fulfillment ?? "clinic")
+        )
+          return false;
+        service = parsed.data;
+      } else if (!doc) return false;
+      if (!slotId.startsWith(`${doctorId}|${date}|`)) return false;
       const index = Number(slotId.split("|")[2]);
       const times = [
         "09:00 AM",
@@ -244,7 +301,8 @@ export const useCare = create<State>((set, get) => {
       const pending: Booking = {
         id,
         doctorId,
-        doctorName: doc.name,
+        doctorName: service ? "Clinic services team" : doc!.name,
+        ...(service ? { service } : {}),
         date,
         slotId,
         time: times[index] ?? slotId,
@@ -255,7 +313,7 @@ export const useCare = create<State>((set, get) => {
       persist();
       if (s.offline) return true;
       try {
-        const result = await postBooking(doctorId, slotId, id);
+        const result = await postBooking(doctorId, slotId, id, service);
         if (current !== generation) return false;
         set((s) => ({
           bookings: s.bookings.map((b) => (b.id === id ? result : b)),
@@ -291,6 +349,7 @@ export const useCare = create<State>((set, get) => {
               booking.doctorId,
               booking.slotId,
               booking.id,
+              booking.service,
             );
             if (current !== generation) return;
             set((s) => ({
@@ -300,7 +359,10 @@ export const useCare = create<State>((set, get) => {
             }));
           } catch (error) {
             if (current !== generation) return;
-            if (error instanceof AxiosError && error.response?.status === 409)
+            if (
+              error instanceof AxiosError &&
+              [400, 409].includes(error.response?.status ?? 0)
+            )
               set((s) => ({
                 bookings: s.bookings.map((b) =>
                   b.id === booking.id ? { ...b, status: "failed" } : b,
