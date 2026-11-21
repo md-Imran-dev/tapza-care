@@ -1,8 +1,9 @@
 import { AuthShell } from "@/components/auth/AuthShell";
 import { Button, Txt, styles } from "@/components/ui";
+import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useAuth } from "@/state/auth";
-import { tracking as uiTracking, useTheme } from "@/theme";
+import { useAuth } from "@/store/authStore";
+import { tracking as uiTracking } from "@/theme";
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { TextInput } from "react-native";

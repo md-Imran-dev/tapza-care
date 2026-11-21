@@ -126,7 +126,7 @@ export type Prescription = {
   medicines: Medicine[];
 };
 export type Booking = {
-  service?: import("../lib/services").ServiceReservation;
+  service?: import("../utilities/serviceCatalog").ServiceReservation;
   id: string;
   doctorId: string;
   slotId: string;

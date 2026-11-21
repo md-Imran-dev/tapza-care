@@ -1,5 +1,5 @@
-import { localeFor, translateText } from "../lib/i18n";
-import { useCare } from "../state/app";
+import { useCare } from "../store/careStore";
+import { localeFor, translateText } from "../utilities/i18n";
 export function useTranslation() {
   const lang = useCare((s) => s.lang);
   return {

@@ -1,7 +1,7 @@
 import { Page } from "@/components/Page";
 import { router } from "expo-router";
 import { Button, Card, styles, Txt } from "../../components/ui";
-import { useAuth } from "../../state/auth";
+import { useAuth } from "../../store/authStore";
 export default function Family() {
   const name = useAuth((s) => s.session?.name);
   return (

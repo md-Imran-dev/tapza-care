@@ -1,5 +1,5 @@
+import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useTheme } from "@/theme";
 import type { ReactNode } from "react";
 import {
   KeyboardAvoidingView,

@@ -1,5 +1,5 @@
 import { Txt } from "@/components/ui";
-import { useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
 import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

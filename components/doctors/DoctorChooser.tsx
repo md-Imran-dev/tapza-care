@@ -1,5 +1,6 @@
 import type { Doctor, Prescription } from "@/data/types";
-import { metrics as uiMetrics, useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
+import { metrics as uiMetrics } from "@/theme";
 import { memo, useMemo, useState } from "react";
 import { Pressable, View } from "react-native";
 import { Txt } from "../ui";

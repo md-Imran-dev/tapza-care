@@ -3,9 +3,9 @@ import { fireEvent, render, screen } from "@testing-library/react-native";
 import { Header } from "../components/Header";
 import { LanguageLoader } from "../components/LanguageLoader";
 import { Txt } from "../components/ui";
-import { localeFor, translateText } from "../lib/i18n";
-import { storage } from "../lib/storage";
-import { useCare } from "../state/app";
+import { localeFor, translateText } from "../utilities/i18n";
+import { storage } from "../store/storage";
+import { useCare } from "../store/careStore";
 
 jest.mock("react-native-safe-area-context", () => ({ useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }) }));
 beforeEach(() => { useCare.getState().reset(); useCare.setState({ scope: "language-test", hydrated: true }); });
@@ -49,7 +49,9 @@ test("translation preserves patient data and handles booking copy and locale", (
 });
 
 test("saved language restores after patient hydration", async () => {
-  await storage.write("language:language-restore-test", "te");
+  useCare.persist.setOptions({ name: "care:language-restore-test" });
+  useCare.setState({ scope: "language-restore-test", lang: "te" });
+  useCare.getState().reset();
   useCare.getState().updateNetwork({ latencyMs: 0 });
   await useCare.getState().hydrate("language-restore-test");
   expect(useCare.getState().lang).toBe("te");

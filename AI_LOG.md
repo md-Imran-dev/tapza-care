@@ -28,8 +28,14 @@ I used Codex throughout this assignment for implementation, debugging, tests and
 
 ## Validation and limits
 
-Codex ran lint, TypeScript and 40 tests, and used the connected Android phone for selected flow, layout and release-rendering checks. Unit tests mock native animation. The measured photo sample still had 5.32% janky frames; the later transform-tracking fix has not been rebenchmarked. Details are in [PERFORMANCE_CHECK.md](docs/PERFORMANCE_CHECK.md).
+Codex ran lint, TypeScript and 46 tests, and used the connected Android phone for selected flow, layout and release-rendering checks. Unit tests mock native animation. The measured photo sample still had 5.32% janky frames; the later transform-tracking fix has not been rebenchmarked. Details are in [PERFORMANCE_CHECK.md](docs/PERFORMANCE_CHECK.md).
 
 Dark mode, automated E2E tests and production integrations were left out. iOS, timed notification delivery and a full accessibility audit were not verified. Existing demo media and the shared preview APK predate the latest UI changes.
 
 Active human hours were not tracked. No hour total, commit history or verification result has been invented. This log documents AI involvement; it does not replace understanding and reviewing the code before the follow-up interview.
+
+## Later architecture correction
+
+I asked to follow Zotto's folder pattern: API calls in services, Zustand state and errors in store, and shared code in utilities/hooks. Codex replaced the earlier AsyncStorage runtime persistence with MMKV-backed Zustand persist, then removed AsyncStorage and its migration completely at my request. Patient snapshots are scoped by phone; native session credentials remain in SecureStore. This supersedes the earlier decision to avoid MMKV. Old AsyncStorage-only data is not automatically imported. A fresh native build is required.
+
+Documentation was refreshed on 21 November to explain the service/store refactor and optimization choices. Historical device measurements are separated from the newer debug build; neither MMKV nor folder reorganisation is presented as a measured frame-rate improvement.

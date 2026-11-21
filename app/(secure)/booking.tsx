@@ -1,13 +1,9 @@
 import { DoctorPhoto } from "@/components/doctors/DoctorPhoto";
 import { TransitionScreen } from "@/components/motion/TransitionScreen";
+import { useSlots } from "@/hooks/useSlots";
+import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
-import {
-  space,
-  type,
-  metrics as uiMetrics,
-  radius as uiRadius,
-  useTheme,
-} from "@/theme";
+import { space, type, metrics as uiMetrics, radius as uiRadius } from "@/theme";
 import { router, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
@@ -25,9 +21,7 @@ import { DoctorChooser } from "../../components/doctors/DoctorChooser";
 import { EmptyState, Skeleton } from "../../components/States";
 import { Button, Icon, styles, Txt } from "../../components/ui";
 import { DOCTORS } from "../../data/mockData";
-import { useResource } from "../../hooks/useResource";
-import { getSlots } from "../../lib/api";
-import { useCare } from "../../state/app";
+import { useCare } from "../../store/careStore";
 export default function Booking() {
   const palette = useTheme().colors;
   const { locale } = useTranslation();
@@ -70,16 +64,12 @@ export default function Booking() {
     dates.some((d) => d.iso === initialDate) ? initialDate! : dates[0].iso,
   );
   const [slot, setSlot] = useState(initialSlot ?? "");
-  const network = useCare((s) => s.network);
   const {
     data: slotsData,
     loading,
     error: slotsError,
     retry,
-  } = useResource(
-    () => (selectedDoctorId ? getSlots(d.id, date) : Promise.resolve([])),
-    [selectedDoctorId, d.id, date, network],
-  );
+  } = useSlots(d.id, date, false, !!selectedDoctorId);
   const slots = (slotsData ?? []).filter(
     (s) => s.doctorId === d.id && s.startsAt.startsWith(date),
   );

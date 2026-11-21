@@ -1,8 +1,8 @@
 import { DoctorDetails } from "@/components/doctors/DoctorDetails";
 import { TransitionScreen } from "@/components/motion/TransitionScreen";
 import { Txt } from "@/components/ui";
-import { useCare } from "@/state/app";
-import { useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
+import { useCare } from "@/store/careStore";
 import { router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { ScrollView } from "react-native";

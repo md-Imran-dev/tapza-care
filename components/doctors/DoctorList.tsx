@@ -1,8 +1,8 @@
 import { EmptyState, Skeleton } from "@/components/States";
 import { styles, Txt } from "@/components/ui";
+import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useCare } from "@/state/app";
-import { useTheme } from "@/theme";
+import { useCare } from "@/store/careStore";
 import { useMemo, useState } from "react";
 import { FlatList, TextInput, View } from "react-native";
 import { DoctorCard } from "./DoctorCard";

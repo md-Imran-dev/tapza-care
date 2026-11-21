@@ -1,6 +1,4 @@
-import { useMemo } from "react";
 import type { ThemeColors } from "../data/types";
-import { useCare } from "../state/app";
 // Design foundations are centralized here; screens only consume tokens.
 export const space = {
   none: 0,
@@ -142,8 +140,4 @@ export function deriveTheme(theme: ThemeColors) {
       successZoom: 320,
     },
   };
-}
-export function useTheme() {
-  const theme = useCare((s) => s.config.theme);
-  return useMemo(() => deriveTheme(theme), [theme]);
 }

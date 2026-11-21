@@ -1,7 +1,8 @@
 import { Page } from "@/components/Page";
 import { Button, Card, styles, Txt } from "@/components/ui";
-import { useCare } from "@/state/app";
-import { metrics as uiMetrics, useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
+import { useCare } from "@/store/careStore";
+import { metrics as uiMetrics } from "@/theme";
 import { useState } from "react";
 import { Switch, TextInput, View } from "react-native";
 export default function Admin() {

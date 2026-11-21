@@ -1,8 +1,8 @@
 import { Page } from "@/components/Page";
 import { EmptyState } from "@/components/States";
 import { Button, Card, Icon, styles, Txt } from "@/components/ui";
-import { useCare } from "@/state/app";
-import { useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
+import { useCare } from "@/store/careStore";
 import { router } from "expo-router";
 import { View } from "react-native";
 export default function Bookings() {

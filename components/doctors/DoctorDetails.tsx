@@ -1,10 +1,9 @@
 import type { Doctor } from "@/data/types";
-import { useResource } from "@/hooks/useResource";
+import { useSlots } from "@/hooks/useSlots";
+import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
-import { getSlots } from "@/lib/api";
-import { localDateKey } from "@/lib/dates";
-import { useCare } from "@/state/app";
-import { metrics as uiMetrics, useTheme } from "@/theme";
+import { metrics as uiMetrics } from "@/theme";
+import { localDateKey } from "@/utilities/dates";
 import { useMemo, useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { Skeleton } from "../States";
@@ -20,7 +19,6 @@ export function DoctorDetails({
 }) {
   const t = useTheme();
   const { locale } = useTranslation();
-  const network = useCare((s) => s.network);
   const dates = useMemo(
     () =>
       Array.from({ length: 7 }, (_, i) => {
@@ -32,10 +30,7 @@ export function DoctorDetails({
   );
   const [date, setDate] = useState(dates[0].key);
   const [slot, setSlot] = useState("");
-  const { data, loading, error, retry } = useResource(
-    () => getSlots(doctor.id, date),
-    [doctor.id, date, network],
-  );
+  const { data, loading, error, retry } = useSlots(doctor.id, date);
   // Ignore retained results from a previous date while the next request starts.
   const slots = (data ?? []).filter((s) => s.startsAt.startsWith(date));
   const selected = slots.find((s) => s.id === slot && s.available);

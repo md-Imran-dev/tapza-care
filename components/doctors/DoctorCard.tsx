@@ -1,10 +1,10 @@
 import type { Doctor } from "@/data/types";
+import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
 import {
   metrics as uiMetrics,
   radius as uiRadius,
   space as uiSpace,
-  useTheme,
 } from "@/theme";
 import { router } from "expo-router";
 import { memo } from "react";

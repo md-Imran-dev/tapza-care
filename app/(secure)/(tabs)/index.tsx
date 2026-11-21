@@ -4,7 +4,7 @@ import { TransitionScreen } from "@/components/motion/TransitionScreen";
 import { Skeleton } from "@/components/States";
 import { Button, Txt } from "@/components/ui";
 import type { Section } from "@/data/types";
-import { useCare } from "@/state/app";
+import { useCare } from "@/store/careStore";
 import { space } from "@/theme";
 import { useCallback, useMemo, useState } from "react";
 import { View } from "react-native";

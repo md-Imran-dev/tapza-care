@@ -6,7 +6,7 @@ import { ActivityIndicator, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { setDynamicFeatureFlag } from "react-native-reanimated";
 import { CONFIG_NORMAL } from "../data/mockData";
-import { useAuth } from "../state/auth";
+import { useAuth } from "../store/authStore";
 import { deriveTheme } from "../theme";
 // Keep shared photos aligned with synchronously animated ancestor transforms.
 setDynamicFeatureFlag("TRACK_SYNCHRONOUS_PROPS_IN_LAYOUT_ANIMATIONS", true);

@@ -1,7 +1,8 @@
 import type { Slot } from "@/data/types";
+import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
-import { localDateKey } from "@/lib/dates";
-import { metrics as uiMetrics, useTheme } from "@/theme";
+import { metrics as uiMetrics } from "@/theme";
+import { localDateKey } from "@/utilities/dates";
 import { useMemo } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { Skeleton } from "../States";

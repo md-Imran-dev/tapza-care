@@ -1,10 +1,15 @@
-import { metrics as uiMetrics , space as uiSpace, radius as uiRadius , useTheme } from "@/theme";
-import { translateText } from "@/lib/i18n";
+import { useTheme } from "@/hooks/useTheme";
+import {
+  metrics as uiMetrics,
+  radius as uiRadius,
+  space as uiSpace,
+} from "@/theme";
+import { translateText } from "@/utilities/i18n";
 import { Tabs } from "expo-router";
 import { useWindowDimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Icon, Txt } from "../../../components/ui";
-import { useCare } from "../../../state/app";
+import { useCare } from "../../../store/careStore";
 const routeNames = {
   home: "index",
   bookings: "bookings",
@@ -27,7 +32,8 @@ export default function Layout() {
         tabBarActiveTintColor: t.colors.tabActive,
         tabBarInactiveTintColor: t.colors.inactive,
         tabBarStyle: {
-          height: t.metrics.tabHeight + Math.max(0, fontScale - 1) * t.metrics.touch,
+          height:
+            t.metrics.tabHeight + Math.max(0, fontScale - 1) * t.metrics.touch,
           paddingTop: uiSpace.sm,
           paddingBottom: uiSpace.sm,
           marginHorizontal: uiSpace.md,
@@ -39,13 +45,23 @@ export default function Layout() {
           borderWidth: 1,
           borderColor: t.colors.surface,
           shadowColor: t.colors.textPrimary,
-          shadowOffset: { width: uiMetrics.none, height: uiMetrics.indicatorHeight },
+          shadowOffset: {
+            width: uiMetrics.none,
+            height: uiMetrics.indicatorHeight,
+          },
           shadowOpacity: 0.12,
           shadowRadius: 6,
           elevation: 5,
         },
-        tabBarIconStyle: { width: t.metrics.icon * fontScale, height: t.metrics.icon * fontScale },
-        tabBarLabelStyle: { fontSize: t.type.caption, fontWeight: "500", marginTop: uiSpace.labelGap },
+        tabBarIconStyle: {
+          width: t.metrics.icon * fontScale,
+          height: t.metrics.icon * fontScale,
+        },
+        tabBarLabelStyle: {
+          fontSize: t.type.caption,
+          fontWeight: "500",
+          marginTop: uiSpace.labelGap,
+        },
         tabBarActiveBackgroundColor: "transparent",
         tabBarItemStyle: {
           minHeight: uiMetrics.touch,
@@ -70,7 +86,23 @@ export default function Layout() {
                 tab?.label === "Rx" ? "Prescriptions" : (tab?.label ?? screen),
                 lang,
               ),
-              tabBarLabel: ({ color }) => <Txt style={{ color: String(color), fontSize: t.type.caption, textAlign: "center", marginTop: t.space.labelGap }}>{translateText(tab?.label === "Rx" ? "Prescriptions" : tab?.label ?? screen, lang)}</Txt>,
+              tabBarLabel: ({ color }) => (
+                <Txt
+                  style={{
+                    color: String(color),
+                    fontSize: t.type.caption,
+                    textAlign: "center",
+                    marginTop: t.space.labelGap,
+                  }}
+                >
+                  {translateText(
+                    tab?.label === "Rx"
+                      ? "Prescriptions"
+                      : (tab?.label ?? screen),
+                    lang,
+                  )}
+                </Txt>
+              ),
               tabBarIcon: ({ color }) => (
                 <Icon
                   name={

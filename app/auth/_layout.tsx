@@ -1,5 +1,5 @@
 import { Redirect, Stack, useSegments } from "expo-router";
-import { useAuth } from "../../state/auth";
+import { useAuth } from "../../store/authStore";
 export default function AuthLayout() {
   const session = useAuth((s) => s.session);
   const onboarded = useAuth((s) => s.onboarded);

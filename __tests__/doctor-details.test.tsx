@@ -2,15 +2,15 @@ import { expect, jest, test } from "@jest/globals";
 import { fireEvent, render, screen } from "@testing-library/react-native";
 import { DoctorDetails } from "../components/doctors/DoctorDetails";
 import { DOCTORS } from "../data/mockData";
-import { useResource } from "../hooks/useResource";
-import { localDateKey } from "../lib/dates";
+import { useSlots } from "../hooks/useSlots";
+import { localDateKey } from "../utilities/dates";
 
-jest.mock("../hooks/useResource");
+jest.mock("../hooks/useSlots");
 
 test("doctor details requires an available time and passes the selection to booking", async () => {
   const date = localDateKey();
-  jest.mocked(useResource).mockReturnValue({
-    data: [{ id: "available", startsAt: `${date}T18:30:00+05:30`, label: "06:30 PM", available: true }, { id: "taken", startsAt: `${date}T19:30:00+05:30`, label: "07:30 PM", available: false }],
+  jest.mocked(useSlots).mockReturnValue({
+    data: [{ id: "available", doctorId: "d1", endsAt: "2026-11-20T23:59:59+05:30", period: "morning", startsAt: `${date}T18:30:00+05:30`, label: "06:30 PM", available: true }, { id: "taken", doctorId: "d1", endsAt: "2026-11-20T23:59:59+05:30", period: "morning", startsAt: `${date}T19:30:00+05:30`, label: "07:30 PM", available: false }],
     loading: false, error: null, retry: jest.fn(),
   });
   const onBook = jest.fn();

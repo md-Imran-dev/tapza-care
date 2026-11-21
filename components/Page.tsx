@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header";
 import { styles } from "@/components/ui";
-import { useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
 import { ScrollView, View } from "react-native";
 export function Page({ children }: { children: React.ReactNode }) {
   const t = useTheme();

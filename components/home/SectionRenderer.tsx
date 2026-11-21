@@ -9,15 +9,15 @@ import type {
   Section,
   ServiceItem,
 } from "@/data/types";
-import { useCare } from "@/state/app";
-import { useAuth } from "@/state/auth";
+import { useTheme } from "@/hooks/useTheme";
+import { useAuth } from "@/store/authStore";
+import { useCare } from "@/store/careStore";
 import {
   space,
   type,
   lineHeight as uiLineHeight,
   metrics as uiMetrics,
   radius as uiRadius,
-  useTheme,
 } from "@/theme";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";

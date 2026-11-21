@@ -18,8 +18,7 @@ import {
   findService,
   serviceReservationSchema,
   type ServiceReservation,
-} from "./services";
-import { storage } from "./storage";
+} from "../utilities/serviceCatalog";
 export type Network = {
   latencyMs: number;
   offline: boolean;
@@ -203,36 +202,18 @@ export const api = createClient({
 });
 export const getConfig = () =>
   api.get<LayoutConfig>("/config").then((r) => r.data);
-async function cachedRequest<T>(
-  key: string,
-  request: () => Promise<T>,
-): Promise<T> {
-  try {
-    const result = await request();
-    await storage.write(`api:${key}`, result);
-    return result;
-  } catch (error) {
-    if (error instanceof AxiosError && error.code === "ERR_NETWORK") {
-      const cached = await storage.read<T>(`api:${key}`);
-      if (cached !== null) return cached;
-    }
-    throw error;
-  }
-}
 export const getDoctors = () =>
-  cachedRequest("doctors", () =>
-    api.get<Doctor[]>("/doctors").then((r) => r.data),
-  );
+  api.get<Doctor[]>("/doctors").then((r) => r.data);
 export const getPrescriptions = () =>
-  cachedRequest("prescriptions", () =>
-    api.get<Prescription[]>("/prescriptions").then((r) => r.data),
-  );
+  api.get<Prescription[]>("/prescriptions").then((r) => r.data);
 export const getSlots = (doctorId: string, date: string) =>
-  cachedRequest(`slots:${doctorId}:${date}`, () =>
-    api
-      .get<Slot[]>("/slots", { params: { doctorId, date } })
-      .then((r) => r.data),
-  );
+  api.get<Slot[]>("/slots", { params: { doctorId, date } }).then((r) => r.data);
+export const getServiceSlots = (serviceId: string, date: string) =>
+  api
+    .get<
+      Slot[]
+    >("/service-slots", { params: { doctorId: `service:${serviceId}`, date } })
+    .then((r) => r.data);
 export const postBooking = (
   doctorId: string,
   slotId: string,
@@ -247,12 +228,3 @@ export const postBooking = (
       ...(service ? { service } : {}),
     })
     .then((r) => r.data);
-
-export const getServiceSlots = (serviceId: string, date: string) =>
-  cachedRequest(`service-slots:${serviceId}:${date}`, () =>
-    api
-      .get<
-        Slot[]
-      >("/service-slots", { params: { doctorId: `service:${serviceId}`, date } })
-      .then((r) => r.data),
-  );

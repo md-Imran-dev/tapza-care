@@ -1,5 +1,7 @@
 # Android development validation — 2026-11-20
 
+This report describes the **earlier pre-MMKV release build**, not the current debug binary. For the latest architecture and build status, see [OPTIMIZATION.md](OPTIMIZATION.md) and [SUBMISSION_STATUS.md](SUBMISSION_STATUS.md). No speedup has been measured after the MMKV refactor.
+
 ## Build and device
 
 - V2503, Android 17, ARM64; existing patient data preserved.

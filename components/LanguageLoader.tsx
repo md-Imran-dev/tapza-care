@@ -1,5 +1,5 @@
-import { useCare } from "@/state/app";
-import { useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
+import { useCare } from "@/store/careStore";
 import { ActivityIndicator, Modal, View } from "react-native";
 import { Card, Txt } from "./ui";
 

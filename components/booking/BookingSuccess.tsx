@@ -1,4 +1,4 @@
-import { useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
 import type { ReactNode } from "react";
 import { View } from "react-native";
 import Animated, { FadeIn, ZoomIn } from "react-native-reanimated";

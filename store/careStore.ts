@@ -1,5 +1,8 @@
+import { useApiCache } from "./apiCacheStore";
+import { useSlotStore } from "./slotStore";
 import { AxiosError } from "axios";
 import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { CONFIG_NORMAL, DOCTORS } from "../data/mockData";
 import type {
   Booking,
@@ -16,14 +19,14 @@ import {
   mockServer,
   postBooking,
   type Network,
-} from "../lib/api";
-import { parseConfig } from "../lib/config";
+} from "../services/apiService";
+import { parseConfig } from "../utilities/config";
 import {
   findService,
   serviceReservationSchema,
   type ServiceReservation,
-} from "../lib/services";
-import { storage } from "../lib/storage";
+} from "../utilities/serviceCatalog";
+import { storage, persistenceStorage } from "./storage";
 type LoadStatus = "idle" | "loading" | "ready" | "error" | "cached";
 type State = {
   config: LayoutConfig;
@@ -87,64 +90,27 @@ const seed = {
   hydrated: false,
   syncing: false,
 };
-export const useCare = create<State>((set, get) => {
-  const persist = () => {
-    const s = get();
-    if (!s.scope) return;
-    void storage
-      .write(`patient:${s.scope}`, {
-        doses: s.doses,
-        bookings: s.bookings,
-        lang: s.lang,
-      })
-      .catch(() =>
-        set({
-          message: "Changes could not be saved. Please check device storage.",
-        }),
-      );
-  };
+export const useCare = create<State>()(persist((set, get) => {
   return {
     ...seed,
     hydrate: async (phone) => {
       const current = ++generation;
+      useCare.persist.setOptions({ name: "care:inactive" });
       set({ ...seed, scope: phone });
       try {
-        const [patient, cached, savedLanguage] = await Promise.all([
-          storage.read<{
-            doses: Record<string, boolean>;
-            bookings: Booking[];
-            lang: Lang;
-          }>(`patient:${phone}`),
-          storage.read<LayoutConfig>("config"),
-          storage.read<Lang>(`language:${phone}`),
-        ]);
         if (current !== generation) return;
-        let config = CONFIG_NORMAL;
-        try {
-          if (cached) config = parseConfig(cached);
-        } catch {}
-        set({
-          config,
-          festival: config.theme.festival.name === "diwali",
-          ...(patient
-            ? {
-                doses: patient.doses ?? {},
-                bookings: (patient.bookings ?? []).map((b) =>
-                  b.status === "pending"
-                    ? { ...b, status: "queued" as const }
-                    : b,
-                ),
-                lang: patient.lang ?? "en",
-              }
-            : {}),
-          lang: ["en", "hi", "te"].includes(savedLanguage ?? "")
-            ? savedLanguage!
-            : ["en", "hi", "te"].includes(patient?.lang ?? "")
-              ? patient!.lang
-              : "en",
-          hydrated: true,
-        });
-        mockServer.setFestival(config.theme.festival.name === "diwali");
+        await useApiCache.persist.rehydrate();
+        if (current !== generation) return;
+        const cached = await storage.read<LayoutConfig>("config");
+        if (current !== generation) return;
+        if (cached) {
+          try { set({ config: parseConfig(cached) }); } catch { /* Keep the valid default config. */ }
+        }
+        useCare.persist.setOptions({ name: `care:${phone}` });
+        await useCare.persist.rehydrate();
+        if (current !== generation) return;
+        set({ hydrated: true, festival: get().config.theme.festival.name === "diwali" });
+        mockServer.setFestival(get().festival);
         await Promise.all([get().loadConfig(), get().loadData()]);
         if (current === generation) await get().syncQueue();
       } catch {
@@ -180,8 +146,8 @@ export const useCare = create<State>((set, get) => {
       set({ dataStatus: "loading" });
       try {
         const [doctors, prescriptions] = await Promise.all([
-          getDoctors(),
-          getPrescriptions(),
+          useApiCache.getState().request("doctors", getDoctors),
+          useApiCache.getState().request("prescriptions", getPrescriptions),
         ]);
         if (request === dataRequest && current === generation)
           set({ doctors, prescriptions, dataStatus: "ready" });
@@ -214,7 +180,6 @@ export const useCare = create<State>((set, get) => {
         ]);
         if (current === generation) {
           set({ lang });
-          persist();
         }
       } catch {
         if (current === generation)
@@ -225,7 +190,6 @@ export const useCare = create<State>((set, get) => {
     },
     toggleDose: (key) => {
       set((s) => ({ doses: { ...s.doses, [key]: !s.doses[key] } }));
-      persist();
     },
     setNetwork: (key, value) => {
       get().updateNetwork(
@@ -310,7 +274,6 @@ export const useCare = create<State>((set, get) => {
         tokenNo: 0,
       };
       set({ bookings: [pending, ...s.bookings] });
-      persist();
       if (s.offline) return true;
       try {
         const result = await postBooking(doctorId, slotId, id, service);
@@ -318,8 +281,7 @@ export const useCare = create<State>((set, get) => {
         set((s) => ({
           bookings: s.bookings.map((b) => (b.id === id ? result : b)),
         }));
-        persist();
-        return true;
+          return true;
       } catch (error) {
         if (current !== generation) return false;
         const offline =
@@ -331,8 +293,7 @@ export const useCare = create<State>((set, get) => {
               )
             : s.bookings.filter((b) => b.id !== id),
         }));
-        persist();
-        return offline;
+          return offline;
       }
     },
     syncQueue: async () => {
@@ -370,7 +331,6 @@ export const useCare = create<State>((set, get) => {
               }));
             else break;
           }
-          persist();
         }
       } finally {
         if (current === generation) set({ syncing: false });
@@ -378,8 +338,30 @@ export const useCare = create<State>((set, get) => {
     },
     reset: () => {
       generation++;
+      useSlotStore.getState().reset();
+      useCare.persist.setOptions({ name: "care:inactive" });
       mockServer.reset();
       set({ ...seed });
     },
   };
-});
+}, {
+  name: "care:inactive",
+  storage: createJSONStorage(() => persistenceStorage(() => {
+    const message = "Changes could not be saved. Please check device storage.";
+    if (useCare.getState().message !== message) useCare.setState({ message: message });
+  })),
+  skipHydration: true,
+  partialize: (s) => ({ config: s.config, scope: s.scope, doses: s.doses, bookings: s.bookings, lang: s.lang }),
+  merge: (saved, current) => {
+    const value = saved as Partial<State> | undefined;
+    if (!value || value.scope !== current.scope) return current;
+    try {
+      const config = parseConfig(value.config);
+      return { ...current, config, festival: config.theme.festival.name === "diwali",
+        doses: value.doses ?? {},
+        bookings: (value.bookings ?? []).map((b) => b.status === "pending" ? { ...b, status: "queued" as const } : b),
+        lang: ["en", "hi", "te"].includes(value.lang ?? "") ? value.lang! : current.lang,
+      };
+    } catch { return current; }
+  },
+}));

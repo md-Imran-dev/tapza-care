@@ -1,9 +1,9 @@
 import { EmptyState, Skeleton } from "@/components/States";
 import { Button, Card, Icon, styles, Txt } from "@/components/ui";
 import { STR } from "@/data/mockData";
-import { localDateKey } from "@/lib/dates";
-import { useCare } from "@/state/app";
-import { useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
+import { useCare } from "@/store/careStore";
+import { localDateKey } from "@/utilities/dates";
 import { Pressable, View } from "react-native";
 export function PrescriptionContent({
   open,

@@ -1,8 +1,8 @@
 import { Page } from "@/components/Page";
 import { PrescriptionContent } from "@/components/prescriptions/PrescriptionContent";
 import { Button, Txt, styles } from "@/components/ui";
-import { enableReminders } from "@/lib/reminders";
-import { useCare } from "@/state/app";
+import { useCare } from "@/store/careStore";
+import { enableReminders } from "@/utilities/reminders";
 import { router } from "expo-router";
 import { useState } from "react";
 export default function Reminders() {

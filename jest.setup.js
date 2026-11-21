@@ -1,8 +1,9 @@
+jest.mock("react-native-mmkv", () => ({
+  createMMKV: require("react-native-mmkv/lib/createMMKV/createMockMMKV")
+    .createMockMMKV,
+}));
 jest.mock("react-native-worklets", () =>
   require("react-native-worklets/src/mock"),
-);
-jest.mock("@react-native-async-storage/async-storage", () =>
-  require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );
 jest.mock("expo-symbols", () => ({ SymbolView: () => null }));
 jest.mock("expo-haptics", () => ({
@@ -22,6 +23,7 @@ jest.mock("react-native-reanimated", () => {
     ZoomIn: { duration: () => undefined },
     SharedTransition: { duration: () => ({ easing: () => ({}) }) },
     SharedTransitionBoundary: ({ children }) => children,
+    setDynamicFeatureFlag: jest.fn(),
     useReducedMotion: () => false,
     useSharedValue: (value) => ({ value }),
     useAnimatedStyle: (factory) => factory(),

@@ -1,8 +1,8 @@
 import { BookingSheet } from "@/components/booking/BookingSheet";
 import { ServiceBookingForm } from "@/components/services/ServiceBookingForm";
 import { Txt } from "@/components/ui";
-import { findService } from "@/lib/services";
-import { useCare } from "@/state/app";
+import { useCare } from "@/store/careStore";
+import { findService } from "@/utilities/serviceCatalog";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 

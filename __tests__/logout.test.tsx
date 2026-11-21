@@ -1,7 +1,7 @@
 import { expect, jest, test } from "@jest/globals";
 import { fireEvent, render, screen, within } from "@testing-library/react-native";
 import Profile from "../app/(secure)/(tabs)/profile";
-import { useAuth } from "../state/auth";
+import { useAuth } from "../store/authStore";
 
 jest.mock("../components/Page", () => ({
   Page: ({ children }: { children: React.ReactNode }) => children,

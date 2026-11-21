@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, jest, test } from "@jest/globals";
-import { useAuth } from "../state/auth";
+import { useAuth } from "../store/authStore";
 beforeEach(() => {
   jest.useFakeTimers();
   useAuth.setState({

@@ -1,16 +1,17 @@
 import { afterEach, beforeEach, expect, test } from "@jest/globals";
 import { CONFIG_NORMAL, DOCTORS } from "../data/mockData";
-import { getServiceSlots, mockServer, postBooking } from "../lib/api";
-import { localDateKey } from "../lib/dates";
-import { CLINIC_LOCATION, findService, type ServiceReservation } from "../lib/services";
-import { storage } from "../lib/storage";
-import { useCare } from "../state/app";
+import { getServiceSlots, mockServer, postBooking } from "../services/apiService";
+import { localDateKey } from "../utilities/dates";
+import { CLINIC_LOCATION, findService, type ServiceReservation } from "../utilities/serviceCatalog";
+import { mmkv } from "../store/storage";
+import { useCare } from "../store/careStore";
 const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
 const date = localDateKey(tomorrow);
 const home = findService(CONFIG_NORMAL, "s4")!;
 const request: ServiceReservation = { serviceId: home.id, serviceName: home.name, priceInr: 0, fulfillment: "home", address: "Flat 10, Demo Street, Hyderabad 500081" };
 beforeEach(() => {
   useCare.getState().reset();
+  useCare.persist.setOptions({ name: "care:9999999999" });
   useCare.setState({ scope: "9999999999", hydrated: true, doctors: DOCTORS });
   useCare.getState().updateNetwork({ latencyMs: 0 });
 });
@@ -40,7 +41,7 @@ test("offline service preserves its details through persistence and replay", asy
   expect(await useCare.getState().book("service:s4", date, slot.id, request)).toBe(true);
   expect(useCare.getState().bookings[0].status).toBe("queued");
   await new Promise((r) => setTimeout(r, 0));
-  const saved = await storage.read<{ bookings: { service: ServiceReservation }[] }>("patient:9999999999");
+  const saved = JSON.parse(mmkv.getString("care:9999999999")!).state;
   expect(saved?.bookings[0].service).toEqual(request);
   useCare.getState().updateNetwork({ offline: false });
   while (useCare.getState().syncing) await new Promise((r) => setTimeout(r, 1));

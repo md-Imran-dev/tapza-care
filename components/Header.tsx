@@ -1,10 +1,5 @@
-import {
-  space,
-  type,
-  metrics as uiMetrics,
-  radius as uiRadius,
-  useTheme,
-} from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
+import { space, type, metrics as uiMetrics, radius as uiRadius } from "@/theme";
 import { router } from "expo-router";
 import { Pressable, View } from "react-native";
 import Animated, {
@@ -13,7 +8,7 @@ import Animated, {
   type SharedValue,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useCare } from "../state/app";
+import { useCare } from "../store/careStore";
 import { Icon, styles, Txt } from "./ui";
 export function Header({ scroll }: { scroll?: SharedValue<number> }) {
   const palette = useTheme().colors;

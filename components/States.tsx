@@ -1,5 +1,5 @@
+import { useTheme } from "@/hooks/useTheme";
 import { View } from "react-native";
-import { useTheme } from "../theme";
 import { Button, Card, Icon, Txt, styles } from "./ui";
 export function EmptyState({
   title,

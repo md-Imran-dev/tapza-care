@@ -1,4 +1,5 @@
-import { metrics as uiMetrics, useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
+import { metrics as uiMetrics } from "@/theme";
 import { Modal, ScrollView, View } from "react-native";
 import { Button, Card, styles, Txt } from "./ui";
 

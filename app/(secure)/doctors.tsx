@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { DoctorList } from "@/components/doctors/DoctorList";
 import { TransitionScreen } from "@/components/motion/TransitionScreen";
-import { useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
 import { View } from "react-native";
 
 export default function Doctors() {

@@ -1,9 +1,9 @@
+import { useTheme } from "@/hooks/useTheme";
 import { Redirect, Stack } from "expo-router";
 import { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
-import { useCare } from "../../state/app";
-import { useAuth } from "../../state/auth";
-import { useTheme } from "../../theme";
+import { useAuth } from "../../store/authStore";
+import { useCare } from "../../store/careStore";
 export default function SecureLayout() {
   const session = useAuth((s) => s.session);
   const hydrated = useCare((s) => s.hydrated);

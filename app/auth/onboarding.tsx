@@ -1,7 +1,7 @@
 import { AuthShell } from "@/components/auth/AuthShell";
 import { Button, Icon, Txt, styles } from "@/components/ui";
-import { useAuth } from "@/state/auth";
-import { useTheme } from "@/theme";
+import { useTheme } from "@/hooks/useTheme";
+import { useAuth } from "@/store/authStore";
 import { router } from "expo-router";
 import { useState } from "react";
 import { View } from "react-native";

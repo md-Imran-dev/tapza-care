@@ -1,3 +1,4 @@
+import { useTheme } from "@/hooks/useTheme";
 import {
   space,
   type,
@@ -5,7 +6,6 @@ import {
   metrics as uiMetrics,
   radius as uiRadius,
   tracking as uiTracking,
-  useTheme,
 } from "@/theme";
 import * as Haptics from "expo-haptics";
 import { SymbolView } from "expo-symbols";

@@ -1,10 +1,10 @@
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { Page } from "@/components/Page";
 import { Button, Card, styles, Txt } from "@/components/ui";
+import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
-import { useCare } from "@/state/app";
-import { useAuth } from "@/state/auth";
-import { useTheme } from "@/theme";
+import { useAuth } from "@/store/authStore";
+import { useCare } from "@/store/careStore";
 import { router } from "expo-router";
 import { useState } from "react";
 import { Alert, View } from "react-native";
@@ -52,7 +52,9 @@ export default function Profile() {
             </Txt>
           </View>
           <View style={{ flex: 1 }}>
-            <Txt localize={false} style={styles.heading}>{session?.name}</Txt>
+            <Txt localize={false} style={styles.heading}>
+              {session?.name}
+            </Txt>
             <Txt style={styles.sub}>+91 {session?.phone} · Hyderabad</Txt>
           </View>
         </View>

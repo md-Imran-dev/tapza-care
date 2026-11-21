@@ -1,11 +1,14 @@
 import type { ServiceItem } from "@/data/types";
-import { useResource } from "@/hooks/useResource";
+import { useSlots } from "@/hooks/useSlots";
+import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
-import { getServiceSlots } from "@/lib/api";
-import { localDateKey } from "@/lib/dates";
-import { CLINIC_LOCATION, serviceReservationSchema } from "@/lib/services";
-import { useCare } from "@/state/app";
-import { metrics as uiMetrics, useTheme } from "@/theme";
+import { useCare } from "@/store/careStore";
+import { metrics as uiMetrics } from "@/theme";
+import { localDateKey } from "@/utilities/dates";
+import {
+  CLINIC_LOCATION,
+  serviceReservationSchema,
+} from "@/utilities/serviceCatalog";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { TextInput, View } from "react-native";
@@ -22,7 +25,6 @@ export function ServiceBookingForm({
 }) {
   const t = useTheme();
   const { translate } = useTranslation();
-  const network = useCare((s) => s.network);
   const offline = useCare((s) => s.offline);
   const book = useCare((s) => s.book);
   const [date, setDate] = useState(localDateKey);
@@ -33,10 +35,7 @@ export function ServiceBookingForm({
   const [success, setSuccess] = useState(false);
   const submitting = useRef(false);
   const home = service.fulfillment === "home";
-  const { data, loading, error, retry } = useResource(
-    () => getServiceSlots(service.id, date),
-    [service.id, date, network],
-  );
+  const { data, loading, error, retry } = useSlots(service.id, date, true);
   const slots = (data ?? []).filter(
     (s) =>
       s.doctorId === `service:${service.id}` && s.startsAt.startsWith(date),

@@ -10,3 +10,4 @@ Record an actual Android run when a device is available. Do not present web capt
 6. 2:25–2:50: Reminders → enable notifications on device → show scheduled dose notice. Switch Hindi/Telugu header labels. Show admin JSON editing. Sign out → patient screens require login again.
 
 Capture screenshots of login, normal home, festival home, booking sheet, conflict state and prescription schedule under `docs/screenshots/`. Attach the recording under `docs/` or link its GitHub-hosted media in the README.
+use this link to download the video or watch it :- <https://drive.google.com/file/d/1Q0pDDynCdzMMFk3Req_w3w3vJVvFjOFL/view?usp=drivesdk>

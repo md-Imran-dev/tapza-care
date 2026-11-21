@@ -1,6 +1,7 @@
 import type { Doctor } from "@/data/types";
+import { useTheme } from "@/hooks/useTheme";
 import { useTranslation } from "@/hooks/useTranslation";
-import { metrics as uiMetrics, radius as uiRadius, useTheme } from "@/theme";
+import { metrics as uiMetrics, radius as uiRadius } from "@/theme";
 import { memo } from "react";
 import { FlatList, Image, Pressable, View } from "react-native";
 import { Txt, styles } from "../ui";
